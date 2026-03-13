@@ -1,0 +1,54 @@
+# Dart/Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+build/
+.dart_tool/build/
+.dart_tool/package_config.json
+.dart_tool/flutter_build/
+
+# Android
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/build/
+**/android/**/generated/
+
+# iOS
+**/ios/.symlinks/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/Flutter.podspec
+**/ios/Pods/
+**/ios/Flutter/ephemeral/
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+.history/
+
+# IntelliJ/Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+.out/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+*.log
