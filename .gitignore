@@ -1,54 +1,54 @@
-# Dart/Flutter
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-pubspec.lock
-build/
-.dart_tool/build/
-.dart_tool/package_config.json
-.dart_tool/flutter_build/
+# Mono-repo root .gitignore for Flutter apps
 
-# Android
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/local.properties
-**/android/**/build/
-**/android/**/generated/
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
 
-# iOS
-**/ios/.symlinks/
-**/ios/Flutter/App.framework
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/app.flx
-**/ios/Flutter/app.zip
-**/ios/Flutter/Flutter.podspec
-**/ios/Pods/
-**/ios/Flutter/ephemeral/
-**/ios/ServiceDefinitions.json
-**/ios/Runner/GeneratedPluginRegistrant.*
-
-# VSCode
-.vscode/
-!.vscode/settings.json
-!.vscode/extensions.json
-.history/
-
-# IntelliJ/Android Studio
-.idea/
+# IntelliJ related
 *.iml
 *.ipr
 *.iws
-.out/
+.idea/
 
-# macOS
-.DS_Store
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
 
-# Windows
-Thumbs.db
+# Flutter/Dart/Pub related (applies to all Flutter apps in the mono-repo)
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/.dart_tool/
+**/.flutter-plugins-dependencies
+**/.pub-cache/
+**/.pub/
+**/build/
+**/coverage/
 
-# Logs
-*.log
+# Android Studio will place build artifacts here (for all apps)
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+
+# Symbolication and obfuscation files
+**/app.*.symbols
+**/app.*.map.json
+
+# Flutter app specific patterns
+# Note: Apps directories are tracked, but their build outputs are ignored by patterns above
+
+# Ignore unused platform directories for Flutter apps
+**/linux/
+**/macos/
+**/web/
+**/windows/
