@@ -1,0 +1,6 @@
+# Dart format options
+# See: https://dart.dev/tools/dart-format#configuration
+
+# Enable trailing commas for all applicable cases
+# This will put trailing commas on their own line when formatting
+trailing_comma: all
