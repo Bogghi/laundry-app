@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:laundry_app/providers/app_provider.dart';
-import 'package:riverpod/src/framework.dart';
 
 void main() {
   runApp(
