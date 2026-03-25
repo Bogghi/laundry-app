@@ -35,6 +35,14 @@ migrate_working_dir/
 **/build/
 **/coverage/
 
+# Flutter package specific patterns (shared_assets)
+shared_assets/pubspec.lock
+shared_assets/doc/api/
+shared_assets/.dart_tool/
+shared_assets/.flutter-plugins-dependencies
+shared_assets/build/
+shared_assets/coverage/
+
 # Android Studio will place build artifacts here (for all apps)
 **/android/app/debug
 **/android/app/profile

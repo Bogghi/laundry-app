@@ -36,11 +36,7 @@ class _NavigationControllerState extends ConsumerState<NavigationController> {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
+          _pageController.jumpToPage(index);
           appStoreProvider.changePage(index);
         },
         selectedIndex: appState.currentIndex,
