@@ -25,7 +25,7 @@ flutter:
 
   # To add assets to your package, add an assets section, like this:
   assets:
-    - lib/assets/washer-icon.svg
+    - lib/assets/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #

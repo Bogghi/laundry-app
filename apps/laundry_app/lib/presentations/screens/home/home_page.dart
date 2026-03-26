@@ -9,20 +9,30 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: const Row(
+      body: Container(
+        height: 100,
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              WasherIcon(),
+              WasherIcon(
+                width: 30,
+                height: 30,
+              ),
               SizedBox(width: 10),
-              Text("Prestine")
+              Text(
+                "Pristine",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 30, 58, 138),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
             ],
           ),
         ),
-      ),
-      body: const Center(
-        child: Text("Home"),
       ),
     );
   }
