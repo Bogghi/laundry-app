@@ -9,31 +9,30 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Container(
-        height: 100,
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              WasherIcon(
-                width: 30,
-                height: 30,
+      appBar: AppBar(
+        title: Row(
+          children: [
+            WasherIcon(width: 26, height: 26),
+            SizedBox(width: 10),
+            Text(
+              "Pristine",
+              style: TextStyle(
+                color: Color.fromARGB(255, 30, 58, 138),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(width: 10),
-              Text(
-                "Pristine",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 30, 58, 138),
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            ],
-          ),
-        ),
+            )
+          ],
+        )
       ),
+      body: ListView.builder(
+        itemCount: 50,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text("Tile n $index"),
+          );
+        },
+      )
     );
   }
 }
