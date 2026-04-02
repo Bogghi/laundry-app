@@ -20,6 +20,11 @@ class App extends ConsumerWidget {
     return MaterialApp(
       title: 'Laundry App',
       home: const NavigationController(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.light(
+          primary: Color.fromRGBO(0, 97, 164, 100),
+        ),
+      ),
     );
   }
 }

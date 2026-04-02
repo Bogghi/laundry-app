@@ -3,13 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shared_assets/washer_icon.dart';
 
+import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(248, 249, 250, 100),
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(248, 249, 250, 100),
         title: Row(
           children: [
             WasherIcon(width: 26, height: 26),
@@ -26,11 +30,9 @@ class HomePage extends ConsumerWidget {
         )
       ),
       body: ListView.builder(
-        itemCount: 50,
+        itemCount: 4,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text("Tile n $index"),
-          );
+          return OrderCard();
         },
       )
     );

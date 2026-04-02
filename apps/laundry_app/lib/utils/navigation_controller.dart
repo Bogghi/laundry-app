@@ -35,6 +35,7 @@ class _NavigationControllerState extends ConsumerState<NavigationController> {
 
     return Scaffold(
       bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
         onDestinationSelected: (int index) {
           _pageController.jumpToPage(index);
           appStoreProvider.changePage(index);
