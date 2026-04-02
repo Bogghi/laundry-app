@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shared_assets/wash_order_icon.dart';
 
+import 'package:laundry_app/presentations/screens/home/widgets/order_details_title.dart';
+
 class OrderCard extends ConsumerWidget {
   const OrderCard({super.key});
 
@@ -69,7 +71,33 @@ class OrderCard extends ConsumerWidget {
                     'STATUS',
                   ),
                 )
-              )
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      spacing: 5,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        OrderDetailsTitle(title: "ITEMS"),
+                        Text("12 camice")
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      spacing: 5,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        OrderDetailsTitle(title: "EXPECTED"),
+                        Text("15/04/2026")
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
