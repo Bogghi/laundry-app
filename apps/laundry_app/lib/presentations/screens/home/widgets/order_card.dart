@@ -16,6 +16,8 @@ class OrderCard extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 spacing: 15,
@@ -30,14 +32,44 @@ class OrderCard extends ConsumerWidget {
                       child: WashOrderIcon(),
                     )
                   ),
-                  Text(
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                    "Order title",
+                  Column(
+                    children: [
+                      Text(
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(65, 71, 80, 100)
+                        ),
+                        "Order title",
+                      ),
+                      Text(
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(65, 71, 80, 100)
+                        ),
+                        "Order #1234"
+                      )
+                    ],
                   )
                 ],
               ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(215, 227, 248, 100),
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                  child: Text(
+                    style: TextStyle(
+                      color: Color.fromRGBO(89, 101, 118, 100),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    'STATUS',
+                  ),
+                )
+              )
             ],
           ),
         ),
