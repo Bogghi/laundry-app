@@ -60,3 +60,6 @@ shared_assets/coverage/
 **/macos/
 **/web/
 **/windows/
+
+# Supabase temporary files
+supabase/.temp/
