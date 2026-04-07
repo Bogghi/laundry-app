@@ -59,7 +59,7 @@ class _NavigationControllerState extends ConsumerState<NavigationController> {
         onPageChanged: (index) {
           appStoreProvider.changePage(index);
         },
-        children: const [
+        children: [
           HomePage(),
           SettingsPage(),
         ],

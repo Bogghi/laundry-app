@@ -5,8 +5,12 @@ import 'package:shared_assets/washer_icon.dart';
 
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+  final _future = Supabase.instance.client.from('orders').select();
+
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,11 +33,21 @@ class HomePage extends ConsumerWidget {
           ],
         )
       ),
-      body: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return OrderCard();
-        },
+      body: FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final orders = snapshot.data!;
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              return OrderCard();
+            },
+          );
+        }
       )
     );
   }

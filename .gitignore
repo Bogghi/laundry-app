@@ -63,3 +63,6 @@ shared_assets/coverage/
 
 # Supabase temporary files
 supabase/.temp/
+
+# Env files
+apps/laundry_app/.env
