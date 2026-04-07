@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shared_assets/washer_icon.dart';
 
-import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
+import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 
 class HomePage extends ConsumerWidget {
   final _future = Supabase.instance.client.from('orders').select();
@@ -22,14 +23,7 @@ class HomePage extends ConsumerWidget {
           children: [
             WasherIcon(width: 26, height: 26),
             SizedBox(width: 10),
-            Text(
-              "Pristine",
-              style: TextStyle(
-                color: Color.fromARGB(255, 30, 58, 138),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            )
+            LaundryTitle(text: "Pristine"),
           ],
         )
       ),

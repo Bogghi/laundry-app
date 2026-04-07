@@ -7,7 +7,7 @@ class AddOrderAction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FloatingActionButton(
-      onPressed: () => print("test"),
+      onPressed: () => Navigator.of(context).pushNamed('/add_order'),
       child: const Icon(Icons.add_rounded)
     );
   }
