@@ -29,7 +29,12 @@ class HomePage extends ConsumerWidget {
         future: _future,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
+                strokeCap: StrokeCap.round,
+              )
+            );
           }
 
           final orders = snapshot.data!;
