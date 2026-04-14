@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 
+
 class HomePage extends ConsumerWidget {
   final _future = Supabase.instance.client.from('orders').select();
 
@@ -41,7 +42,10 @@ class HomePage extends ConsumerWidget {
           return ListView.builder(
             itemCount: orders.length,
             itemBuilder: (context, index) {
-              return OrderCard();
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                child: OrderCard(),
+              );
             },
           );
         }
