@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/providers/app_provider.dart';
 import 'package:laundry_app/presentations/screens/home/home_page.dart';
-import 'package:laundry_app/presentations/screens/settings/settings_page.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.dart';
+import 'package:laundry_app/presentations/screens/settings/settings_page.dart';
 
 class NavigationController extends ConsumerStatefulWidget {
   const NavigationController({super.key});

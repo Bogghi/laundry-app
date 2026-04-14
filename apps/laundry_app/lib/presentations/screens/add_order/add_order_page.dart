@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'package:laundry_app/app_theme.dart';
-import 'package:laundry_app/presentations/widgets/laundry_text_form_field.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
+import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
 
 class AddOrderPage extends ConsumerWidget {
   const AddOrderPage({super.key});
@@ -24,14 +22,7 @@ class AddOrderPage extends ConsumerWidget {
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Informazini ordine",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.headlineColor
-                )
-              ),
+              SectionTitle(text: "Informazini ordine"),
               LaundryCard(
                 title: "numero ordine",
                 child: TextFormField(
@@ -50,6 +41,25 @@ class AddOrderPage extends ConsumerWidget {
                   ),
                 )
               ),
+              Row(
+                children: [
+                  SectionTitle(text: "Cliente"),
+                  Spacer(),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/register_client');
+                    },
+                    child: Icon(Icons.add, size: 20)
+                  )
+                ]
+              ),
+              LaundryCard(
+                child: Text("ciao")
+              )
             ],
           ),
         ),
