@@ -12,7 +12,6 @@ class AddOrderPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(248, 249, 250, 100),
       appBar: AppBar(
         title: LaundryTitle(text: "Nuovo ordine"),
       ),

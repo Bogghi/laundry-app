@@ -16,9 +16,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(248, 249, 250, 100),
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(248, 249, 250, 100),
         title: Row(
           children: [
             WasherIcon(width: 26, height: 26),

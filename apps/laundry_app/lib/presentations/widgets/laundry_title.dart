@@ -13,7 +13,7 @@ class LaundryTitle extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Text(
         style: TextStyle(
-          color: Color.fromARGB(255, 30, 58, 138),
+          color: Theme.of(context).primaryColor,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),

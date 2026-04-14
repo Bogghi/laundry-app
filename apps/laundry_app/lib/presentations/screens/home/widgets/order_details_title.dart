@@ -15,7 +15,6 @@ class OrderDetailsTitle extends ConsumerWidget {
       style: TextStyle(
         fontSize: 10,
         fontWeight: FontWeight.bold,
-        color: Color.fromRGBO(113, 119, 130, 100)
       ),
       title
     );
