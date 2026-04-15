@@ -11,7 +11,8 @@ class NavigationController extends ConsumerStatefulWidget {
   const NavigationController({super.key});
 
   @override
-  ConsumerState<NavigationController> createState() => _NavigationControllerState();}
+  ConsumerState<NavigationController> createState() => _NavigationControllerState();
+}
 
 class _NavigationControllerState extends ConsumerState<NavigationController> {
   late PageController _pageController;
