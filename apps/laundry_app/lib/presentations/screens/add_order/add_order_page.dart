@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:laundry_app/app_theme.dart';
+import 'package:laundry_app/presentations/screens/add_order/widgets/user_row.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
@@ -104,31 +105,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                         );
                       },
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Icon(Icons.account_circle, size: 50, color: AppTheme.primaryColorTone1),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Mario Rossi"),
-                              Text("m.rossi@gmail.com")
-                            ],
-                          ),
-                          flex: 3,
-                        ),
-                        Expanded(
-                          child: IconButton(
-                            onPressed: (){},
-                            icon: Icon(Icons.cancel_outlined)
-                          ),
-                          flex: 1,
-                        )
-                      ],
-                    ),
+                    UserRow(name: "Mario Rossi", phoneNumber: "351 9283873"),
                   ],
                 )
               )
