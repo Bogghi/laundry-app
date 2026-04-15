@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
+import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 
 
 class HomePage extends ConsumerWidget {
@@ -30,12 +31,7 @@ class HomePage extends ConsumerWidget {
         future: _future,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-                strokeCap: StrokeCap.round,
-              )
-            );
+            return LaundryLoader();
           }
 
           final orders = snapshot.data!;

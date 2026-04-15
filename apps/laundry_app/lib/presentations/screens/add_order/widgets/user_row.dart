@@ -5,11 +5,13 @@ import 'package:laundry_app/app_theme.dart';
 class UserRow extends StatelessWidget {
   final String name;
   final String phoneNumber;
+  final VoidCallback? onPressed;
 
   const UserRow({
     super.key,
     required this.name,
-    required this.phoneNumber
+    required this.phoneNumber,
+    required this.onPressed,
   });
 
   @override
@@ -39,7 +41,7 @@ class UserRow extends StatelessWidget {
         Expanded(
           flex: 1,
           child: IconButton(
-              onPressed: (){},
+              onPressed: onPressed,
               icon: Icon(Icons.cancel_outlined)
           ),
         )

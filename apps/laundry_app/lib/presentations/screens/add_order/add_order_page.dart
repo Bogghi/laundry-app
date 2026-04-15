@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:laundry_app/app_theme.dart';
-import 'package:laundry_app/presentations/screens/add_order/widgets/user_row.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
+import 'package:laundry_app/presentations/screens/add_order/widgets/associate_client.dart';
 
 class AddOrderPage extends ConsumerStatefulWidget {
   const AddOrderPage({super.key});
@@ -63,52 +63,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                   )
                 ]
               ),
-              LaundryCard(
-                child: Column(
-                  spacing: 18,
-                  children: [
-                    Autocomplete<String>(
-                      optionsBuilder: (TextEditingValue textEditingValue) {
-                        // Replace with your logic to fetch/filter client suggestions
-                        // For example, from a provider: ref.watch(clientsProvider).where(...)
-                        final options = ['Client 1', 'Client 2', 'Client 3']; // Placeholder
-                        return options.where((option) =>
-                            option.toLowerCase().contains(textEditingValue.text.toLowerCase()));
-                      },
-                      onSelected: (String selection) {
-                        // Handle selection, e.g., update form state
-                        print('Selected: $selection');
-                      },
-                      fieldViewBuilder: (
-                          BuildContext context,
-                          TextEditingController textEditingController,
-                          FocusNode focusNode,
-                          VoidCallback onFieldSubmitted
-                      ) {
-                        return TextFormField(
-                          controller: textEditingController,
-                          focusNode: focusNode,
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.search, color: AppTheme.primaryColorTone1),
-                            contentPadding: EdgeInsets.zero,
-                            border: InputBorder.none,
-                            hintText: "Cerca un cliente esistente",
-                            hintStyle: TextStyle(
-                              color: AppTheme.primaryColorTone1,
-                              fontSize: 18,
-                            ),
-                          ),
-                          style: TextStyle(
-                            color: AppTheme.primaryColorTone1,
-                            fontSize: 18,
-                          ),
-                        );
-                      },
-                    ),
-                    UserRow(name: "Mario Rossi", phoneNumber: "351 9283873"),
-                  ],
-                )
-              )
+              AssociateClient(),
             ],
           ),
         ),
