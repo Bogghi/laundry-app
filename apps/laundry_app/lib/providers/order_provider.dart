@@ -1,39 +1,33 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:shared_assets/models/user_model.dart';
+import 'package:shared_assets/models/order_model.dart';
+import 'package:shared_assets/services/supabase_service.dart';
 
 class OrderState {
-  final String? orderNumber;
-  final UserModel? newOrderClient;
+  final Future<List<OrderModel>>? currOrders;
 
   OrderState({
-    this.orderNumber,
-    this.newOrderClient,
+    required this.currOrders,
   });
 
   OrderState copyWith({
-    String? orderNumber,
-    UserModel? newOrderClient,
-  }) => OrderState(
-    orderNumber: orderNumber ?? this.orderNumber,
-    newOrderClient: newOrderClient ?? this.newOrderClient,
-  );
+   Future <List<OrderModel>>? currOrders,
+  }) {
+    return OrderState(
+      currOrders: currOrders ?? this.currOrders,
+    );
+  }
 }
 
 class OrderProvider extends Notifier<OrderState> {
   @override
   OrderState build() {
-    return OrderState();
+    final futureOrders = SupabaseService.instance.orders.getAll();
+    return OrderState(currOrders: futureOrders);
   }
 
-  void setNewOrderData(
-    String? orderNumber,
-    UserModel? newOrderClient,
-  ) {
-    state = state.copyWith(
-      orderNumber: orderNumber,
-      newOrderClient: newOrderClient,
-    );
+  void fetchOrders() {
+    state = state.copyWith(currOrders: SupabaseService.instance.orders.getAll());
   }
 }
 

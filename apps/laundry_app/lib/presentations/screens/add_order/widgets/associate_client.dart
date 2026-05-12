@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_assets/models/user_model.dart';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:laundry_app/providers/user_provider.dart';
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/user_row.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
@@ -16,8 +16,7 @@ class AssociateClient extends ConsumerStatefulWidget {
 }
 
 class _AssociateClientState extends ConsumerState<AssociateClient> {
-  final _future = Supabase.instance.client.from('clients').select();
-  Map<String, dynamic>? client;
+  UserModel? client;
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
@@ -30,8 +29,10 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
 
   @override
   Widget build(BuildContext context) {
+    final userState = ref.watch(userProvider);
+
     return FutureBuilder(
-      future: _future,
+      future: userState.currUsers,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LaundryLoader();
@@ -41,16 +42,15 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
         return LaundryCard(
           child: Column(
             children: [
-              Autocomplete<Map<String, dynamic>>(
+              Autocomplete<UserModel>(
                 textEditingController: _controller,
                 focusNode: _focusNode,
                 optionsBuilder: (TextEditingValue textEditingValue) {
                   return clients
-                    .where((client) => client['name'].toLowerCase().contains(textEditingValue.text.toLowerCase()))
-                    .toList();
+                      .where((client) => client.name.toLowerCase().contains(textEditingValue.text.toLowerCase()));
                 },
-                displayStringForOption: (Map<String, dynamic> client) => client['name'],
-                onSelected: (Map<String, dynamic> selectedClient) {
+                displayStringForOption: (client) => client.name,
+                onSelected: (selectedClient) {
                   setState(() {
                     client = selectedClient;
                   });
@@ -86,8 +86,8 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 18.0),
                   child: UserRow(
-                    name: client != null ? client!['name'] : '',
-                    phoneNumber: client != null ? client!['phone_number'].toString() : '',
+                    name: client != null ? client!.name : '',
+                    phoneNumber: client != null ? client!.phoneNumber.toString() : '',
                     onPressed: () {
                       setState(() {
                         client = null;

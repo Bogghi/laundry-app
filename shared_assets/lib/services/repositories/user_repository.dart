@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../models/user_model.dart';
+import 'package:shared_assets/models/user_model.dart';
 
 class UserRepository {
   final SupabaseClient _client;

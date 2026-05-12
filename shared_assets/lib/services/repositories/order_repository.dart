@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../models/order_model.dart';
+import 'package:shared_assets/models/order_model.dart';
 
 class OrderRepository {
   final SupabaseClient _client;
