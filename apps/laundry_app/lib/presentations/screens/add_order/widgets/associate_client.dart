@@ -51,7 +51,6 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
                 },
                 displayStringForOption: (Map<String, dynamic> client) => client['name'],
                 onSelected: (Map<String, dynamic> selectedClient) {
-                  print(selectedClient.toString());
                   setState(() {
                     client = selectedClient;
                   });

@@ -15,6 +15,9 @@ class AddOrderPage extends ConsumerStatefulWidget {
 }
 
 class _AddOrderPageState extends ConsumerState<AddOrderPage> {
+  DateTime? selectedDate;
+  final TextEditingController dateController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,10 +67,47 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                 ]
               ),
               AssociateClient(),
+              LaundryCard(
+                title: "data consegna",
+                child: TextFormField(
+                  controller: dateController,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: AppTheme.primaryColorTone1,
+                      fontSize: 18,
+                    ),
+                  ),
+                  style: TextStyle(
+                    color: AppTheme.primaryColorTone1,
+                    fontSize: 18,
+                  ),
+                  onTap: () => {
+                    _selectDate(),
+                  }
+                ),
+              ),
             ],
           ),
         ),
       )
     );
+  }
+
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+        dateController.text = "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
   }
 }
