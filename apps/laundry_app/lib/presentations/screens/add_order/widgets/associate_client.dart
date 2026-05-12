@@ -47,7 +47,7 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
                 focusNode: _focusNode,
                 optionsBuilder: (TextEditingValue textEditingValue) {
                   return clients
-                      .where((client) => client.name.toLowerCase().contains(textEditingValue.text.toLowerCase()));
+                    .where((client) => client.name.toLowerCase().contains(textEditingValue.text.toLowerCase()));
                 },
                 displayStringForOption: (client) => client.name,
                 onSelected: (selectedClient) {
