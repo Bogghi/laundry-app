@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:shared_assets/wash_order_icon.dart';
+import 'package:shared_assets/icons/wash_order_icon.dart';
 
 import 'package:laundry_app/presentations/screens/home/widgets/order_details_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
