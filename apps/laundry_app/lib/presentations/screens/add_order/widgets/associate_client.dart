@@ -8,6 +8,7 @@ import 'package:laundry_app/presentations/screens/add_order/widgets/user_row.dar
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
+import 'package:laundry_app/utils/routes.dart';
 
 class AssociateClient extends ConsumerStatefulWidget {
   final ValueChanged<ClientModel> onSelectedClient;
@@ -58,7 +59,7 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
                       shadowColor: Colors.transparent
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/register_client');
+                      Navigator.of(context).pushNamed(Routes.registerClient);
                     },
                     child: Icon(Icons.add, size: 20),
                   )

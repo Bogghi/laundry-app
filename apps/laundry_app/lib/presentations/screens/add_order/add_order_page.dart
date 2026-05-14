@@ -9,6 +9,7 @@ import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/associate_client.dart';
+import 'package:laundry_app/utils/routes.dart';
 
 class AddOrderPage extends ConsumerStatefulWidget {
   const AddOrderPage({super.key});
@@ -56,7 +57,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                             backgroundColor: Theme.of(context).colorScheme.primary
                           ),
                           onPressed: (){
-                            Navigator.of(context).pushNamed('/garmets_picker');
+                            Navigator.of(context).pushNamed(Routes.garmetsPicker);
                           },
                           child: Text(
                             "Aggiungi Capo",
