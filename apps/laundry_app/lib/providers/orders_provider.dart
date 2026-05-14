@@ -3,27 +3,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_assets/models/order_model.dart';
 import 'package:shared_assets/services/supabase_service.dart';
 
-class OrderState {
+class OrdersState {
   final Future<List<OrderModel>>? currOrders;
 
-  OrderState({
+  OrdersState({
     required this.currOrders,
   });
 
-  OrderState copyWith({
+  OrdersState copyWith({
    Future <List<OrderModel>>? currOrders,
   }) {
-    return OrderState(
+    return OrdersState(
       currOrders: currOrders ?? this.currOrders,
     );
   }
 }
 
-class OrderProvider extends Notifier<OrderState> {
+class OrdersProvider extends Notifier<OrdersState> {
   @override
-  OrderState build() {
+  OrdersState build() {
     final futureOrders = SupabaseService.instance.orders.getAll();
-    return OrderState(currOrders: futureOrders);
+    return OrdersState(currOrders: futureOrders);
   }
 
   void fetchOrders() {
@@ -31,5 +31,5 @@ class OrderProvider extends Notifier<OrderState> {
   }
 }
 
-final orderProvider = NotifierProvider<OrderProvider, OrderState>(OrderProvider.new);
+final ordersProvider = NotifierProvider<OrdersProvider, OrdersState>(OrdersProvider.new);
 

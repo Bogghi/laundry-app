@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shared_assets/icons/washer_icon.dart';
 
-import 'package:laundry_app/providers/order_provider.dart';
+import 'package:laundry_app/providers/orders_provider.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
@@ -14,8 +14,8 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orderState = ref.watch(orderProvider);
-    final notifier = ref.read(orderProvider.notifier);
+    final orderState = ref.watch(ordersProvider);
+    final notifier = ref.read(ordersProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
