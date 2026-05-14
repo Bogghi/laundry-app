@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shared_assets/models/client_model.dart';
+
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
@@ -17,6 +19,8 @@ class AddOrderPage extends ConsumerStatefulWidget {
 class _AddOrderPageState extends ConsumerState<AddOrderPage> {
   DateTime? selectedDate;
   final TextEditingController dateController = TextEditingController();
+  final TextEditingController orderNumberController = TextEditingController();
+  late ClientModel orderClient;
 
   @override
   Widget build(BuildContext context) {
@@ -24,32 +28,44 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
       appBar: AppBar(
         title: LaundryTitle(text: "Nuovo ordine"),
       ),
-      body: Form(
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
+      body: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: SingleChildScrollView(
           child: Column(
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SectionTitle(text: "CAPI"),
+              LaundryCard(
+                child: Placeholder(),
+              ),
+              SectionTitle(text: "INFORMAZIONI"),
               LaundryCard(
                 title: "numero ordine",
                 child: TextFormField(
+                  controller: orderNumberController,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     border: InputBorder.none,
                     hintText: "#98",
                     hintStyle: TextStyle(
                       color: AppTheme.primaryColorTone1,
-                      fontSize: 18
+                      fontSize: 18,
                     ),
                   ),
                   style: TextStyle(
                     color: AppTheme.primaryColorTone1,
-                    fontSize: 18
+                    fontSize: 18,
                   ),
-                )
+                ),
               ),
-              AssociateClient(),
+              AssociateClient(
+                onSelectedClient: (client) {
+                  setState(() {
+                    orderClient = client;
+                  });
+                },
+              ),
               LaundryCard(
                 title: "data consegna",
                 child: TextFormField(
@@ -69,13 +85,13 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                   ),
                   onTap: () => {
                     _selectDate(),
-                  }
+                  },
                 ),
               ),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 

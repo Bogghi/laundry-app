@@ -10,7 +10,12 @@ import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 
 class AssociateClient extends ConsumerStatefulWidget {
-  const AssociateClient({super.key});
+  final ValueChanged<ClientModel> onSelectedClient;
+
+  const AssociateClient({
+    super.key,
+    required this.onSelectedClient,
+  });
 
   @override
   ConsumerState<AssociateClient> createState() => _AssociateClientState();
@@ -71,6 +76,7 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
                   setState(() {
                     client = selectedClient;
                   });
+                  widget.onSelectedClient(selectedClient);
                 },
                 fieldViewBuilder: (
                   BuildContext context,
