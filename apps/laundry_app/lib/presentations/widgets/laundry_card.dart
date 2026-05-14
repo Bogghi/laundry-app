@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:laundry_app/app_theme.dart';
+import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 
 class LaundryCard extends StatelessWidget {
   final Widget child;
@@ -25,14 +25,7 @@ class LaundryCard extends StatelessWidget {
           children: [
             Visibility(
               visible: title != null,
-              child: Text(
-                (title ?? "").toUpperCase(),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.subHeadlineColor,
-                )
-              )
+              child: LaundrySubHeading(text: title ?? ""),
             ),
             Visibility(
               visible: title == null,

@@ -7,6 +7,7 @@ import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/user_row.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
+import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 
 class AssociateClient extends ConsumerStatefulWidget {
   const AssociateClient({super.key});
@@ -42,6 +43,22 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
         return LaundryCard(
           child: Column(
             children: [
+              Row(
+                children: [
+                  LaundrySubHeading(text: "Cliente"),
+                  Spacer(),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/register_client');
+                    },
+                    child: Icon(Icons.add, size: 20),
+                  )
+                ],
+              ),
               Autocomplete<ClientModel>(
                 textEditingController: _controller,
                 focusNode: _focusNode,

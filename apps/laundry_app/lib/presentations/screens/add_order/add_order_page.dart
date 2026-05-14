@@ -31,7 +31,6 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SectionTitle(text: "Informazini ordine"),
               LaundryCard(
                 title: "numero ordine",
                 child: TextFormField(
@@ -49,22 +48,6 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                     fontSize: 18
                   ),
                 )
-              ),
-              Row(
-                children: [
-                  SectionTitle(text: "Cliente"),
-                  Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/register_client');
-                    },
-                    child: Icon(Icons.add, size: 20)
-                  )
-                ]
               ),
               AssociateClient(),
               LaundryCard(
