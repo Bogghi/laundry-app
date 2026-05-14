@@ -5,11 +5,13 @@ import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 class LaundryCard extends StatelessWidget {
   final Widget child;
   final String? title;
+  final EdgeInsetsGeometry? padding;
 
   const LaundryCard({
     super.key,
     required this.child,
     this.title,
+    this.padding = const EdgeInsets.all(18.0)
   });
 
   @override
@@ -19,7 +21,7 @@ class LaundryCard extends StatelessWidget {
       color: Colors.white,
       shadowColor: Colors.transparent,
       child: Padding(
-        padding: const EdgeInsets.all(18.0),
+        padding: padding!,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

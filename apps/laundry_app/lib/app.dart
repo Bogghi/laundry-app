@@ -5,6 +5,7 @@ import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/utils/navigation_controller.dart';
 import 'package:laundry_app/presentations/screens/add_order/add_order_page.dart';
 import 'package:laundry_app/presentations/screens/register_client/register_client_page.dart';
+import 'package:laundry_app/presentations/screens/garmets_picker/garmets_picker_page.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -20,6 +21,7 @@ class App extends ConsumerWidget {
           '/': (context) => const NavigationController(),
           '/add_order': (context) => const AddOrderPage(),
           '/register_client': (context) => const RegisterClientPage(),
+          '/garmets_picker': (context) => const GarmetsPickerPage(),
         }
     );
   }

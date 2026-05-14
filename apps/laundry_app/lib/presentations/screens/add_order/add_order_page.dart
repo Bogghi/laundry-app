@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 
 import 'package:shared_assets/models/client_model.dart';
 
@@ -37,7 +38,35 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
             children: [
               SectionTitle(text: "CAPI"),
               LaundryCard(
-                child: Placeholder(),
+                padding: EdgeInsets.zero,
+                child: LaundryCard(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 10,
+                      children: [
+                        LaundrySubHeading(text: 'capi selezionati'),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(double.infinity, 48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(13.0)
+                            ),
+                            backgroundColor: Theme.of(context).colorScheme.primary
+                          ),
+                          onPressed: (){
+                            Navigator.of(context).pushNamed('/garmets_picker');
+                          },
+                          child: Text(
+                            "Aggiungi Capo",
+                            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               SectionTitle(text: "INFORMAZIONI"),
               LaundryCard(
