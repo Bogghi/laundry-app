@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_assets/models/user_model.dart';
+import 'package:shared_assets/models/client_model.dart';
 
-import 'package:laundry_app/providers/user_provider.dart';
+import 'package:laundry_app/providers/clients_provider.dart';
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/user_row.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
@@ -16,7 +16,7 @@ class AssociateClient extends ConsumerStatefulWidget {
 }
 
 class _AssociateClientState extends ConsumerState<AssociateClient> {
-  UserModel? client;
+  ClientModel? client;
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
@@ -29,7 +29,7 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
 
   @override
   Widget build(BuildContext context) {
-    final userState = ref.watch(userProvider);
+    final userState = ref.watch(clientsProvider);
 
     return FutureBuilder(
       future: userState.currUsers,
@@ -42,7 +42,7 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
         return LaundryCard(
           child: Column(
             children: [
-              Autocomplete<UserModel>(
+              Autocomplete<ClientModel>(
                 textEditingController: _controller,
                 focusNode: _focusNode,
                 optionsBuilder: (TextEditingValue textEditingValue) {

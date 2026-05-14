@@ -1,11 +1,11 @@
-class UserModel {
+class ClientModel {
   final int id;
   final String name;
   final int phoneNumber;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  UserModel({
+  ClientModel({
     required this.id,
     required this.name,
     required this.phoneNumber,
@@ -13,8 +13,8 @@ class UserModel {
     required this.updatedAt,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
+  factory ClientModel.fromJson(Map<String, dynamic> json) {
+    return ClientModel(
       id: json['id'] as int,
       name: json['name'] as String,
       phoneNumber: json['phone_number'] as int,

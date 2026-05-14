@@ -1,40 +1,40 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:shared_assets/models/user_model.dart';
+import 'package:shared_assets/models/client_model.dart';
 
-class UserRepository {
+class ClientsRepository {
   final SupabaseClient _client;
 
-  UserRepository(this._client);
+  ClientsRepository(this._client);
 
-  Future<List<UserModel>> getAll() async {
+  Future<List<ClientModel>> getAll() async {
     final data = await _client.from('clients').select();
-    return data.map((json) => UserModel.fromJson(json)).toList();
+    return data.map((json) => ClientModel.fromJson(json)).toList();
   }
 
-  Future<UserModel?> getById(int id) async {
+  Future<ClientModel?> getById(int id) async {
     final data = await _client.from('clients').select().eq('id', id).maybeSingle();
     if (data == null) return null;
-    return UserModel.fromJson(data);
+    return ClientModel.fromJson(data);
   }
 
-  Future<UserModel> create(UserModel user) async {
+  Future<ClientModel> create(ClientModel user) async {
     final data = await _client
         .from('clients')
         .insert(user.toJson())
         .select()
         .single();
-    return UserModel.fromJson(data);
+    return ClientModel.fromJson(data);
   }
 
-  Future<UserModel> update(UserModel user) async {
+  Future<ClientModel> update(ClientModel user) async {
     final data = await _client
         .from('clients')
         .update(user.toJson())
         .eq('id', user.id)
         .select()
         .single();
-    return UserModel.fromJson(data);
+    return ClientModel.fromJson(data);
   }
 
   Future<void> delete(int id) async {

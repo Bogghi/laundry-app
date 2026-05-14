@@ -2,10 +2,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:shared_assets/models/order_model.dart';
 
-class OrderRepository {
+class OrdersRepository {
   final SupabaseClient _client;
 
-  OrderRepository(this._client);
+  OrdersRepository(this._client);
 
   Future<List<OrderModel>> getAll() async {
     final data = await _client.from('orders').select();
