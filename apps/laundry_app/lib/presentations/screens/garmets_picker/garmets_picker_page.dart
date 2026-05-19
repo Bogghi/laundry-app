@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
+import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
+import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 import 'package:laundry_app/utils/routes.dart';
 
 class GarmetsPickerPage extends ConsumerStatefulWidget {
@@ -18,7 +20,7 @@ class _GarmetsPickerPageState extends ConsumerState<GarmetsPickerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: LaundryTitle(text: "Seleziona capi"),
+        title: LaundryTitle(text: "Selezione capi"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -40,13 +42,48 @@ class _GarmetsPickerPageState extends ConsumerState<GarmetsPickerPage> {
       body: LaundryScaffoldPadding(
         child: Column(
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: LaundryCard(
-                title: "capi selezionati",
-                child: Text("test"),
-              ),
-            )
+            LaundryCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10.0,
+                children: [
+                  LaundrySubHeading(text: "capi selezionati"),
+                  LaundryDisplayList(children: [
+                    Row(
+                      children: [
+                        Text("Camicia"),
+                        Spacer(),
+                        Text(
+                          "X2",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Pantalone"),
+                        Spacer(),
+                        Text(
+                          "X3",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Giacca"),
+                        Spacer(),
+                        Text(
+                          "X4",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ])
+                ],
+              )
+            ),
+
           ],
         ),
       )
