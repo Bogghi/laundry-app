@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 
+/// A reusable card widget that displays content with optional title.
+///
+/// Renders differently based on the [title] parameter:
+/// - Without title: [child] is displayed directly inside a white Card
+/// - With title: [child] is displayed inside a nested gray Card below the [LaundrySubHeading] title
+///
+/// The [padding] parameter controls internal spacing (defaults to 18.0 on all sides).
+/// Both cards have transparent shadows and the inner card has rounded corners.
+
 class LaundryCard extends StatelessWidget {
   final Widget child;
   final String? title;

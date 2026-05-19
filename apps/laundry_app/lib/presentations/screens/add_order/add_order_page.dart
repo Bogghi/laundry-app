@@ -7,6 +7,7 @@ import 'package:shared_assets/models/client_model.dart';
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
+import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/associate_client.dart';
 import 'package:laundry_app/utils/routes.dart';
@@ -30,8 +31,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
       appBar: AppBar(
         title: LaundryTitle(text: "Nuovo ordine"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
+      body: LaundryScaffoldPadding(
         child: SingleChildScrollView(
           child: Column(
             spacing: 10,

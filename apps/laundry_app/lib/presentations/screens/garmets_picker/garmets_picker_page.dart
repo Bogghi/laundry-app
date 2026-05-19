@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
+import 'package:laundry_app/presentations/widgets/laundry_card.dart';
+import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/utils/routes.dart';
 
 class GarmetsPickerPage extends ConsumerStatefulWidget {
@@ -35,6 +37,19 @@ class _GarmetsPickerPageState extends ConsumerState<GarmetsPickerPage> {
           )
         ],
       ),
+      body: LaundryScaffoldPadding(
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: LaundryCard(
+                title: "capi selezionati",
+                child: Text("test"),
+              ),
+            )
+          ],
+        ),
+      )
     );
   }
 }
