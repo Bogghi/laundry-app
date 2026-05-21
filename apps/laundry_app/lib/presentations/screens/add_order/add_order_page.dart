@@ -57,7 +57,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                             backgroundColor: Theme.of(context).colorScheme.primary
                           ),
                           onPressed: (){
-                            Navigator.of(context).pushNamed(Routes.garmetsPicker);
+                            Navigator.of(context).pushNamed(Routes.itemsPicker);
                           },
                           child: Text(
                             "Aggiungi Capo",
