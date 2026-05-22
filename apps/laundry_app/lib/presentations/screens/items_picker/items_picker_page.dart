@@ -23,49 +23,54 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
     final itemsState = ref.watch(itemsProvider);
     final ordersState = ref.watch(ordersProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: LaundryTitle(text: "Selezione capi"),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) ref.read(ordersProvider.notifier).clearNewOrder();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: LaundryTitle(text: "Selezione capi"),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary
+                ),
+                onPressed: (){
+                  Navigator.of(context).pushNamed(Routes.addOrder);
+                },
+                child: Icon(
+                  Icons.check,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
-              onPressed: (){
-                Navigator.of(context).pushNamed(Routes.addOrder);
-              },
-              child: Icon(
-                Icons.check,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-          )
-        ],
-      ),
-      body: LaundryScaffoldPadding(
-        child: FutureBuilder(
-            future: itemsState.currItems,
-            builder: (context, snapshot) {
-              if(!snapshot.hasData) {
-                return LaundryLoader();
-              }
-
-              final List<ItemModel> items = snapshot.data!;
-              final selectedItems = ordersState.selectedItems;
-
-              return GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                childAspectRatio: 0.65,
-                children: List.generate(items.length, (index) {
-                  return _buildClothingGridItem(index, items[index], selectedItems, ref);
-                }),
-              );
-            }
+            )
+          ],
         ),
-      )
+        body: LaundryScaffoldPadding(
+          child: FutureBuilder(
+              future: itemsState.currItems,
+              builder: (context, snapshot) {
+                if(!snapshot.hasData) {
+                  return LaundryLoader();
+                }
+
+                final List<ItemModel> items = snapshot.data!;
+                final selectedItems = ordersState.selectedItems;
+
+                return GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  childAspectRatio: 0.65,
+                  children: List.generate(items.length, (index) {
+                    return _buildClothingGridItem(index, items[index], selectedItems, ref);
+                  }),
+                );
+              }
+          ),
+        )
+      ),
     );
   }
 
