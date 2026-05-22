@@ -93,7 +93,7 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                         crossAxisCount: 2,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        childAspectRatio: 0.65,
+                        childAspectRatio: 0.8,
                         children: List.generate(items.length, (index) {
                           return _buildClothingGridItem(index, items[index], selectedItems, ref);
                         }),
@@ -141,7 +141,7 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 4,
+              spacing: 2,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
