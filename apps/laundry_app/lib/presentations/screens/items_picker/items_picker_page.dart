@@ -119,52 +119,54 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
         borderRadius: _gridElementBorderRadius(row, col, 3, 2),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 8,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        spacing: 4,
         children: [
           Icon(Icons.checkroom, size: 40, color: Colors.grey[800]),
           Text(
             item.name,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
           Text(
             "quantita selezionata: $quantity",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 10,
               color: Colors.grey[600],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 4,
+              spacing: 2,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   onPressed: () => ref.read(ordersProvider.notifier).addItem(item.id),
-                  child: const Text("AGGIUNGI"),
+                  child: const Text("AGGIUNGI", style: TextStyle(fontSize: 10)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   onPressed: quantity > 0
                       ? () => ref.read(ordersProvider.notifier).removeItem(item.id)
                       : null,
-                  child: const Icon(Icons.remove),
+                  child: const Icon(Icons.remove, size: 16),
                 ),
               ],
             ),
