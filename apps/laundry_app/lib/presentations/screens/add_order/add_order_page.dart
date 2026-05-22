@@ -44,6 +44,23 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
     return Scaffold(
       appBar: AppBar(
         title: LaundryTitle(text: "Nuovo ordine"),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary
+              ),
+              onPressed: (){
+                // Navigator.of(context).pushNamed(Routes.addOrder);
+              },
+              child: Icon(
+                Icons.check,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
+          )
+        ],
       ),
       body: LaundryScaffoldPadding(
         child: SingleChildScrollView(
