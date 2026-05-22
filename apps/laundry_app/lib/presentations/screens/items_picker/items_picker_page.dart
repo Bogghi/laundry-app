@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shared_assets/models/item_model.dart';
+
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
+import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
+import 'package:laundry_app/providers/items_provider.dart';
 import 'package:laundry_app/utils/routes.dart';
 
 class ItemsPickerPage extends ConsumerStatefulWidget {
@@ -25,57 +29,9 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
     {'name': 'Mutande', 'icon': Icons.assignment_late},
   ];
 
-  BorderRadius _gridElementBorderRadius(int row, int col, int totalRows, int totalCols) {
-    final outsideCorner = const Radius.circular(10.0);
-    final innersideCorner = const Radius.circular(4.0);
-
-    final isTopEdge = row == 0;
-    final isBottomEdge = row == totalRows - 1;
-    final isLeftEdge = col == 0;
-    final isRightEdge = col == totalCols - 1;
-
-    return BorderRadius.only(
-      topLeft: (isTopEdge && isLeftEdge) ? outsideCorner : innersideCorner,
-      topRight: (isTopEdge && isRightEdge) ? outsideCorner : innersideCorner,
-      bottomLeft: (isBottomEdge && isLeftEdge) ? outsideCorner : innersideCorner,
-      bottomRight: (isBottomEdge && isRightEdge) ? outsideCorner : innersideCorner,
-    );
-  }
-
-  Widget _buildClothingGridItem(int index) {
-    final row = index ~/ 2;
-    final col = index % 2;
-    final item = clothingItems[index];
-
-    return Container(
-      margin: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: _gridElementBorderRadius(row, col, 3, 2),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(item['icon'] as IconData?, size: 40, color: Colors.grey[800]),
-          const SizedBox(height: 8),
-          Text(
-            item['name'] as String,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text("Aggiungi"),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final
+    final itemsState = ref.watch(itemsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -101,8 +57,13 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
       body: LaundryScaffoldPadding(
         child: SingleChildScrollView(
           child: FutureBuilder(
-            future: future,
-            builder: (context, asyncSnapshot) {
+            future: itemsState.currItems,
+            builder: (context, snapshot) {
+              if(!snapshot.hasData) {
+                return LaundryLoader();
+              }
+
+              final List<ItemModel>? items = snapshot.data;
               return Column(
                 children: [
                   LaundryCard(
@@ -151,7 +112,9 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                     crossAxisCount: 2,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    children: List.generate(6, (index) => _buildClothingGridItem(index)),
+                    children: List.generate(items!.length, (index) {
+                      return _buildClothingGridItem(index, items[index]);
+                    }),
                   ),
                 ],
               );
@@ -159,6 +122,53 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
           ),
         ),
       )
+    );
+  }
+
+  Widget _buildClothingGridItem(int index, ItemModel item) {
+    final row = index ~/ 2;
+    final col = index % 2;
+
+    return Container(
+      margin: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: _gridElementBorderRadius(row, col, 3, 2),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.checkroom, size: 40, color: Colors.grey[800]),
+          const SizedBox(height: 8),
+          Text(
+            item.name,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text("Aggiungi"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  BorderRadius _gridElementBorderRadius(int row, int col, int totalRows, int totalCols) {
+    final outsideCorner = const Radius.circular(10.0);
+    final innersideCorner = const Radius.circular(4.0);
+
+    final isTopEdge = row == 0;
+    final isBottomEdge = row == totalRows - 1;
+    final isLeftEdge = col == 0;
+    final isRightEdge = col == totalCols - 1;
+
+    return BorderRadius.only(
+      topLeft: (isTopEdge && isLeftEdge) ? outsideCorner : innersideCorner,
+      topRight: (isTopEdge && isRightEdge) ? outsideCorner : innersideCorner,
+      bottomLeft: (isBottomEdge && isLeftEdge) ? outsideCorner : innersideCorner,
+      bottomRight: (isBottomEdge && isRightEdge) ? outsideCorner : innersideCorner,
     );
   }
 }
