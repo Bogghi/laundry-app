@@ -20,14 +20,6 @@ class ItemsPickerPage extends ConsumerStatefulWidget {
 }
 
 class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
-  final List<Map<String, dynamic>> clothingItems = [
-    {'name': 'Camicia', 'icon': Icons.checkroom},
-    {'name': 'Pantalone', 'icon': Icons.assignment},
-    {'name': 'Giacca', 'icon': Icons.assignment_ind},
-    {'name': 'Maglietta', 'icon': Icons.checkroom},
-    {'name': 'Calzini', 'icon': Icons.assessment},
-    {'name': 'Mutande', 'icon': Icons.assignment_late},
-  ];
 
   @override
   Widget build(BuildContext context) {
