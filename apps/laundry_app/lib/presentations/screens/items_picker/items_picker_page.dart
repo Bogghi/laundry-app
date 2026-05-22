@@ -7,7 +7,6 @@ import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart'
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 import 'package:laundry_app/utils/routes.dart';
-import 'package:laundry_app/providers/items_provider.dart';
 
 class ItemsPickerPage extends ConsumerStatefulWidget {
   const ItemsPickerPage({super.key});
@@ -76,6 +75,8 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final
+
     return Scaffold(
       appBar: AppBar(
         title: LaundryTitle(text: "Selezione capi"),
@@ -99,57 +100,62 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
       ),
       body: LaundryScaffoldPadding(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              LaundryCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 10.0,
-                  children: [
-                    LaundrySubHeading(text: "capi selezionati"),
-                    LaundryDisplayList(children: [
-                      Row(
-                        children: [
-                          Text("Camicia"),
-                          Spacer(),
-                          Text(
-                            "X2",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text("Pantalone"),
-                          Spacer(),
-                          Text(
-                            "X3",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text("Giacca"),
-                          Spacer(),
-                          Text(
-                            "X4",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ])
-                  ],
-                )
-              ),
-              const SizedBox(height: 20),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: List.generate(6, (index) => _buildClothingGridItem(index)),
-              ),
-            ],
+          child: FutureBuilder(
+            future: future,
+            builder: (context, asyncSnapshot) {
+              return Column(
+                children: [
+                  LaundryCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 10.0,
+                      children: [
+                        LaundrySubHeading(text: "capi selezionati"),
+                        LaundryDisplayList(children: [
+                          Row(
+                            children: [
+                              Text("Camicia"),
+                              Spacer(),
+                              Text(
+                                "X2",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Pantalone"),
+                              Spacer(),
+                              Text(
+                                "X3",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Giacca"),
+                              Spacer(),
+                              Text(
+                                "X4",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ])
+                      ],
+                    )
+                  ),
+                  const SizedBox(height: 20),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: List.generate(6, (index) => _buildClothingGridItem(index)),
+                  ),
+                ],
+              );
+            }
           ),
         ),
       )

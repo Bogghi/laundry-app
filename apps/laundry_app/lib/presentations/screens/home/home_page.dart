@@ -10,12 +10,11 @@ import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 
 
 class HomePage extends ConsumerWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final orderState = ref.watch(ordersProvider);
-    final notifier = ref.read(ordersProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
