@@ -10,6 +10,7 @@ import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/providers/items_provider.dart';
+import 'package:laundry_app/providers/orders_provider.dart';
 import 'package:laundry_app/utils/routes.dart';
 
 class ItemsPickerPage extends ConsumerStatefulWidget {
@@ -20,10 +21,10 @@ class ItemsPickerPage extends ConsumerStatefulWidget {
 }
 
 class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
-
   @override
   Widget build(BuildContext context) {
     final itemsState = ref.watch(itemsProvider);
+    final ordersState = ref.watch(ordersProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,8 +48,7 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
         ],
       ),
       body: LaundryScaffoldPadding(
-        child: SingleChildScrollView(
-          child: FutureBuilder(
+        child: FutureBuilder(
             future: itemsState.currItems,
             builder: (context, snapshot) {
               if(!snapshot.hasData) {
@@ -56,7 +56,13 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
               }
 
               final List<ItemModel>? items = snapshot.data;
+              final selectedItems = ordersState.selectedItems;
+              final selectedItemsList = items!
+                  .where((item) => selectedItems.containsKey(item.id))
+                  .toList();
+
               return Column(
+                spacing: 20,
                 children: [
                   LaundryCard(
                     child: Column(
@@ -64,62 +70,47 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                       spacing: 10.0,
                       children: [
                         LaundrySubHeading(text: "capi selezionati"),
-                        LaundryDisplayList(children: [
-                          Row(
-                            children: [
-                              Text("Camicia"),
-                              Spacer(),
-                              Text(
-                                "X2",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Pantalone"),
-                              Spacer(),
-                              Text(
-                                "X3",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Giacca"),
-                              Spacer(),
-                              Text(
-                                "X4",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                        ])
+                        LaundryDisplayList(children: selectedItemsList.isEmpty
+                            ? [Text("Nessun capo selezionato")]
+                            : [
+                                ...selectedItemsList.map((item) => Row(
+                                  children: [
+                                    Text(item.name),
+                                    const Spacer(),
+                                    Text(
+                                      "X${selectedItems[item.id]}",
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ))
+                              ])
                       ],
-                    )
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: List.generate(items!.length, (index) {
-                      return _buildClothingGridItem(index, items[index]);
-                    }),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: List.generate(items.length, (index) {
+                          return _buildClothingGridItem(index, items[index], selectedItems, ref);
+                        }),
+                      ),
+                    ),
                   ),
                 ],
               );
             }
-          ),
         ),
       )
     );
   }
 
-  Widget _buildClothingGridItem(int index, ItemModel item) {
+  Widget _buildClothingGridItem(int index, ItemModel item, Map<int, int> selectedItems, WidgetRef ref) {
     final row = index ~/ 2;
     final col = index % 2;
+    final quantity = selectedItems[item.id] ?? 0;
 
     return Container(
       margin: const EdgeInsets.all(4),
@@ -129,19 +120,59 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 8,
         children: [
           Icon(Icons.checkroom, size: 40, color: Colors.grey[800]),
-          const SizedBox(height: 8),
           Text(
             item.name,
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text("Aggiungi"),
-          ),
+          if (quantity == 0)
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () => ref.read(ordersProvider.notifier).addItem(item.id),
+                  child: const Text("AGGIUNGI"),
+                ),
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => ref.read(ordersProvider.notifier).addItem(item.id),
+                      child: const Text("AGGIUNGI"),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () => ref.read(ordersProvider.notifier).removeItem(item.id),
+                    child: const Icon(Icons.remove),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
