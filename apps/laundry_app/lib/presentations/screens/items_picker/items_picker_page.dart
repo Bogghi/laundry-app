@@ -61,35 +61,35 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                   .where((item) => selectedItems.containsKey(item.id))
                   .toList();
 
-              return Column(
-                spacing: 20,
-                children: [
-                  LaundryCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 10.0,
-                      children: [
-                        LaundrySubHeading(text: "capi selezionati"),
-                        LaundryDisplayList(children: selectedItemsList.isEmpty
-                            ? [Text("Nessun capo selezionato")]
-                            : [
-                                ...selectedItemsList.map((item) => Row(
-                                  children: [
-                                    Text(item.name),
-                                    const Spacer(),
-                                    Text(
-                                      "X${selectedItems[item.id]}",
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ))
-                              ])
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: GridView.count(
+              return Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    spacing: 20,
+                    children: [
+                      LaundryCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 10.0,
+                          children: [
+                            LaundrySubHeading(text: "capi selezionati"),
+                            LaundryDisplayList(children: selectedItemsList.isEmpty
+                                ? [Text("Nessun capo selezionato")]
+                                : [
+                                    ...selectedItemsList.map((item) => Row(
+                                      children: [
+                                        Text(item.name),
+                                        const Spacer(),
+                                        Text(
+                                          "X${selectedItems[item.id]}",
+                                          style: const TextStyle(fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ))
+                                  ])
+                          ],
+                        ),
+                      ),
+                      GridView.count(
                         crossAxisCount: 2,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -97,9 +97,9 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                           return _buildClothingGridItem(index, items[index], selectedItems, ref);
                         }),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               );
             }
         ),
@@ -128,12 +128,21 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          if (quantity == 0)
-            SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ElevatedButton(
+          Text(
+            "quantita selezionata: $quantity",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[600],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 4,
+              children: [
+                ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -144,35 +153,22 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                   onPressed: () => ref.read(ordersProvider.notifier).addItem(item.id),
                   child: const Text("AGGIUNGI"),
                 ),
-              ),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => ref.read(ordersProvider.notifier).addItem(item.id),
-                      child: const Text("AGGIUNGI"),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () => ref.read(ordersProvider.notifier).removeItem(item.id),
-                    child: const Icon(Icons.remove),
-                  ),
-                ],
-              ),
+                  onPressed: quantity > 0
+                      ? () => ref.read(ordersProvider.notifier).removeItem(item.id)
+                      : null,
+                  child: const Icon(Icons.remove),
+                ),
+              ],
             ),
+          ),
         ],
       ),
     );
