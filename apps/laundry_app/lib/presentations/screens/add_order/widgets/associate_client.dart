@@ -12,10 +12,14 @@ import 'package:laundry_app/utils/routes.dart';
 
 class AssociateClient extends ConsumerStatefulWidget {
   final ValueChanged<ClientModel> onSelectedClient;
+  final VoidCallback? onClearedClient;
+  final FocusNode? focusNode;
 
   const AssociateClient({
     super.key,
     required this.onSelectedClient,
+    this.onClearedClient,
+    this.focusNode,
   });
 
   @override
@@ -25,12 +29,14 @@ class AssociateClient extends ConsumerStatefulWidget {
 class _AssociateClientState extends ConsumerState<AssociateClient> {
   ClientModel? client;
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  FocusNode? _ownedFocusNode;
+
+  FocusNode get _focusNode => widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
 
   @override
   void dispose() {
     _controller.dispose();
-    _focusNode.dispose();
+    _ownedFocusNode?.dispose();
     super.dispose();
   }
 
@@ -117,6 +123,7 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
                         client = null;
                         _controller.clear();
                       });
+                      widget.onClearedClient?.call();
                     },
                   ),
                 )

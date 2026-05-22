@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 
-import 'package:shared_assets/models/client_model.dart';
-
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
@@ -13,7 +11,6 @@ import 'package:laundry_app/presentations/screens/add_order/widgets/section_titl
 import 'package:laundry_app/presentations/screens/add_order/widgets/associate_client.dart';
 import 'package:laundry_app/providers/items_provider.dart';
 import 'package:laundry_app/providers/orders_provider.dart';
-import 'package:laundry_app/utils/routes.dart';
 
 class AddOrderPage extends ConsumerStatefulWidget {
   const AddOrderPage({super.key});
@@ -23,10 +20,21 @@ class AddOrderPage extends ConsumerStatefulWidget {
 }
 
 class _AddOrderPageState extends ConsumerState<AddOrderPage> {
-  DateTime? selectedDate;
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController orderNumberController = TextEditingController();
-  late ClientModel orderClient;
+  late TextEditingController orderNumberController;
+  final FocusNode _clientFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    orderNumberController = TextEditingController(text: ref.read(ordersProvider).orderNumber);
+  }
+
+  @override
+  void dispose() {
+    orderNumberController.dispose();
+    _clientFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +95,9 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                 title: "numero ordine",
                 child: TextFormField(
                   controller: orderNumberController,
+                  onChanged: (value) {
+                    ref.read(ordersProvider.notifier).setOrderNumber(value);
+                  },
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     border: InputBorder.none,
@@ -103,32 +114,36 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                 ),
               ),
               AssociateClient(
+                focusNode: _clientFocusNode,
                 onSelectedClient: (client) {
-                  setState(() {
-                    orderClient = client;
-                  });
+                  ref.read(ordersProvider.notifier).setOrderClient(client);
+                },
+                onClearedClient: () {
+                  ref.read(ordersProvider.notifier).setOrderClient(null);
                 },
               ),
               LaundryCard(
                 title: "data consegna",
-                child: TextFormField(
-                  controller: dateController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      color: AppTheme.primaryColorTone1,
-                      fontSize: 18,
+                child: GestureDetector(
+                  onTap: _selectDate,
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        ordersState.deliveryDate != null
+                            ? "${ordersState.deliveryDate!.day}/${ordersState.deliveryDate!.month}/${ordersState.deliveryDate!.year}"
+                            : "Seleziona una data",
+                        style: TextStyle(
+                          color: ordersState.deliveryDate != null
+                              ? AppTheme.primaryColorTone1
+                              : AppTheme.primaryColorTone1.withValues(alpha: 0.4),
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                   ),
-                  style: TextStyle(
-                    color: AppTheme.primaryColorTone1,
-                    fontSize: 18,
-                  ),
-                  onTap: () => {
-                    _selectDate(),
-                  },
                 ),
               ),
             ],
@@ -139,6 +154,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
   }
 
   Future<void> _selectDate() async {
+    _clientFocusNode.unfocus();
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -146,10 +162,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
       lastDate: DateTime.now().add(Duration(days: 365)),
     );
     if (picked != null) {
-      setState(() {
-        selectedDate = picked;
-        dateController.text = "${picked.day}/${picked.month}/${picked.year}";
-      });
+      ref.read(ordersProvider.notifier).setDeliveryDate(picked);
     }
   }
 }

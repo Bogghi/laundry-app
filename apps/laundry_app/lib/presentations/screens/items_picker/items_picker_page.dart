@@ -55,18 +55,13 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
               final List<ItemModel> items = snapshot.data!;
               final selectedItems = ordersState.selectedItems;
 
-              return Expanded(
-                child: SingleChildScrollView(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    childAspectRatio: 0.65,
-                    children: List.generate(items.length, (index) {
-                      return _buildClothingGridItem(index, items[index], selectedItems, ref);
-                    }),
-                  ),
-                ),
+              return GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                childAspectRatio: 0.65,
+                children: List.generate(items.length, (index) {
+                  return _buildClothingGridItem(index, items[index], selectedItems, ref);
+                }),
               );
             }
         ),

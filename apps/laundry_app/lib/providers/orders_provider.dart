@@ -1,24 +1,37 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shared_assets/models/order_model.dart';
+import 'package:shared_assets/models/client_model.dart';
 import 'package:shared_assets/services/supabase_service.dart';
 
 class OrdersState {
   final Future<List<OrderModel>>? currOrders;
   final Map<int, int> selectedItems;
+  final ClientModel? orderClient;
+  final DateTime? deliveryDate;
+  final String orderNumber;
 
   OrdersState({
     required this.currOrders,
     this.selectedItems = const {},
+    this.orderClient,
+    this.deliveryDate,
+    this.orderNumber = '',
   });
 
   OrdersState copyWith({
    Future <List<OrderModel>>? currOrders,
    Map<int, int>? selectedItems,
+   ClientModel? orderClient,
+   DateTime? deliveryDate,
+   String? orderNumber,
   }) {
     return OrdersState(
       currOrders: currOrders ?? this.currOrders,
       selectedItems: selectedItems ?? this.selectedItems,
+      orderClient: orderClient ?? this.orderClient,
+      deliveryDate: deliveryDate ?? this.deliveryDate,
+      orderNumber: orderNumber ?? this.orderNumber,
     );
   }
 }
@@ -49,6 +62,27 @@ class OrdersProvider extends Notifier<OrdersState> {
       updated[itemId] = current - 1;
     }
     state = state.copyWith(selectedItems: updated);
+  }
+
+  void setOrderClient(ClientModel? client) {
+    state = state.copyWith(orderClient: client);
+  }
+
+  void setDeliveryDate(DateTime? date) {
+    state = state.copyWith(deliveryDate: date);
+  }
+
+  void setOrderNumber(String number) {
+    state = state.copyWith(orderNumber: number);
+  }
+
+  void clearNewOrder() {
+    state = state.copyWith(
+      selectedItems: {},
+      orderClient: null,
+      deliveryDate: null,
+      orderNumber: '',
+    );
   }
 }
 
