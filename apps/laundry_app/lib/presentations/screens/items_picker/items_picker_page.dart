@@ -4,10 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_assets/models/item_model.dart';
 
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
-import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
-import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
-import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/providers/items_provider.dart';
 import 'package:laundry_app/providers/orders_provider.dart';
@@ -55,50 +52,19 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                 return LaundryLoader();
               }
 
-              final List<ItemModel>? items = snapshot.data;
+              final List<ItemModel> items = snapshot.data!;
               final selectedItems = ordersState.selectedItems;
-              final selectedItemsList = items!
-                  .where((item) => selectedItems.containsKey(item.id))
-                  .toList();
 
               return Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    spacing: 20,
-                    children: [
-                      LaundryCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 10.0,
-                          children: [
-                            LaundrySubHeading(text: "capi selezionati"),
-                            LaundryDisplayList(children: selectedItemsList.isEmpty
-                                ? [Text("Nessun capo selezionato")]
-                                : [
-                                    ...selectedItemsList.map((item) => Row(
-                                      children: [
-                                        Text(item.name),
-                                        const Spacer(),
-                                        Text(
-                                          "X${selectedItems[item.id]}",
-                                          style: const TextStyle(fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ))
-                                  ])
-                          ],
-                        ),
-                      ),
-                      GridView.count(
-                        crossAxisCount: 2,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        childAspectRatio: 0.8,
-                        children: List.generate(items.length, (index) {
-                          return _buildClothingGridItem(index, items[index], selectedItems, ref);
-                        }),
-                      ),
-                    ],
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    childAspectRatio: 0.65,
+                    children: List.generate(items.length, (index) {
+                      return _buildClothingGridItem(index, items[index], selectedItems, ref);
+                    }),
                   ),
                 ),
               );

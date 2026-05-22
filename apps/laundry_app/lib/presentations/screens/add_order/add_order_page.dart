@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
+import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 
 import 'package:shared_assets/models/client_model.dart';
 
@@ -10,6 +11,8 @@ import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/associate_client.dart';
+import 'package:laundry_app/providers/items_provider.dart';
+import 'package:laundry_app/providers/orders_provider.dart';
 import 'package:laundry_app/utils/routes.dart';
 
 class AddOrderPage extends ConsumerStatefulWidget {
@@ -27,6 +30,9 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final itemsState = ref.watch(itemsProvider);
+    final ordersState = ref.watch(ordersProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: LaundryTitle(text: "Nuovo ordine"),
@@ -38,36 +44,43 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionTitle(text: "CAPI"),
-              LaundryCard(
-                padding: EdgeInsets.zero,
-                child: LaundryCard(
-                  child: SizedBox(
-                    width: double.infinity,
+              FutureBuilder(
+                future: itemsState.currItems,
+                builder: (context, snapshot) {
+                  final selectedItems = ordersState.selectedItems;
+                  final items = snapshot.data ?? [];
+                  final selectedItemsList = items
+                      .where((item) => selectedItems.containsKey(item.id))
+                      .toList();
+
+                  return LaundryCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 10,
                       children: [
                         LaundrySubHeading(text: 'capi selezionati'),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(double.infinity, 48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(13.0)
-                            ),
-                            backgroundColor: Theme.of(context).colorScheme.primary
-                          ),
-                          onPressed: (){
-                            Navigator.of(context).pushNamed(Routes.itemsPicker);
-                          },
-                          child: Text(
-                            "Aggiungi Capo",
-                            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                          ),
+                        LaundryDisplayList(
+                          children: selectedItemsList.isEmpty
+                            ? [const Text("Nessun capo selezionato")]
+                            : [
+                                ...selectedItemsList.map((item) => Row(
+                                  children: [
+                                    Text(item.name),
+                                    const Spacer(),
+                                    Text(
+                                      "X${selectedItems[item.id]}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                              ],
                         ),
                       ],
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               SectionTitle(text: "INFORMAZIONI"),
               LaundryCard(
