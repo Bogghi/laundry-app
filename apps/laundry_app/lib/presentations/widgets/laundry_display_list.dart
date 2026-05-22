@@ -30,7 +30,7 @@ class LaundryDisplayList extends StatelessWidget {
   }
 
   BorderRadius elementBorderRadius(int index, int length) {
-    final topLeft, topRight, bottomLeft, bottomRight;
+    final Radius topLeft, topRight, bottomLeft, bottomRight;
     final outsideCorner = Radius.circular(10.0);
     final innersideCorner = Radius.circular(4.0);
 
