@@ -19,9 +19,11 @@ class OrdersRepository {
   }
 
   Future<OrderModel> create(OrderModel order) async {
+    final orderJson = order.toJson();
+    orderJson.remove('id');
     final data = await _client
         .from('orders')
-        .insert(order.toJson())
+        .insert(orderJson)
         .select()
         .single();
     return OrderModel.fromJson(data);
@@ -31,7 +33,7 @@ class OrdersRepository {
     final data = await _client
         .from('orders')
         .update(order.toJson())
-        .eq('id', order.id)
+        .eq('id', order.id as Object)
         .select()
         .single();
     return OrderModel.fromJson(data);

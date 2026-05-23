@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
-import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 
+import 'package:laundry_app/utils/routes.dart';
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
+import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
+import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
 import 'package:laundry_app/presentations/screens/add_order/widgets/associate_client.dart';
 import 'package:laundry_app/providers/items_provider.dart';
@@ -51,8 +52,25 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary
               ),
-              onPressed: (){
-                // Navigator.of(context).pushNamed(Routes.addOrder);
+              onPressed: () async {
+                try {
+                  await ref.read(ordersProvider.notifier).saveOrder();
+                  ref.read(ordersProvider.notifier).clearNewOrder();
+                  if (mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.home,
+                      (route) => false,
+                    );
+                  }
+                }
+                catch(e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error saving order: $e')),
+                    );
+                  }
+                }
               },
               child: Icon(
                 Icons.check,

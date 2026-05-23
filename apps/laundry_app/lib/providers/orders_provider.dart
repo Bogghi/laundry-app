@@ -76,6 +76,26 @@ class OrdersProvider extends Notifier<OrdersState> {
     state = state.copyWith(orderNumber: number);
   }
 
+  // here clearNewOrder is not called because it will be called by the items_picker page pop
+  Future<OrderModel> saveOrder() async {
+    try {
+      final OrderModel newOrder = OrderModel(
+        orderNumber: state.orderNumber,
+        clientId: state.orderClient!.id,
+        laundryId: 1,
+        deliveryDate: state.deliveryDate,
+      );
+      final OrderModel savedOrder = await SupabaseService.instance.orders.create(newOrder);
+      state = state.copyWith(
+        currOrders: SupabaseService.instance.orders.getAll()
+      );
+      return savedOrder;
+    }
+    catch (e) {
+      rethrow;
+    }
+  }
+
   void clearNewOrder() {
     state = state.copyWith(
       selectedItems: {},
