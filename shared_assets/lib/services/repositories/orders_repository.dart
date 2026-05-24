@@ -18,9 +18,11 @@ class OrdersRepository {
     return OrderModel.fromJson(data);
   }
 
+  // over here data are removed to let the db auto set the data
   Future<OrderModel> create(OrderModel order) async {
     final orderJson = order.toJson();
     orderJson.remove('id');
+    orderJson.remove('created_at');
     final data = await _client
         .from('orders')
         .insert(orderJson)
