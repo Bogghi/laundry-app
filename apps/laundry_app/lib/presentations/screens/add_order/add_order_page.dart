@@ -23,6 +23,7 @@ class AddOrderPage extends ConsumerStatefulWidget {
 class _AddOrderPageState extends ConsumerState<AddOrderPage> {
   late TextEditingController orderNumberController;
   final FocusNode _clientFocusNode = FocusNode();
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -52,7 +53,8 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary
               ),
-              onPressed: () async {
+              onPressed: _isSaving ? null : () async {
+                setState(() => _isSaving = true);
                 try {
                   await ref.read(ordersProvider.notifier).saveOrder();
                   ref.read(ordersProvider.notifier).clearNewOrder();
@@ -63,19 +65,23 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                       (route) => false,
                     );
                   }
-                }
-                catch(e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error saving order: $e')),
-                    );
-                  }
+                } finally {
+                  if (mounted) setState(() => _isSaving = false);
                 }
               },
-              child: Icon(
-                Icons.check,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
+              child: _isSaving
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  )
+                : Icon(
+                  Icons.check,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
             ),
           )
         ],
