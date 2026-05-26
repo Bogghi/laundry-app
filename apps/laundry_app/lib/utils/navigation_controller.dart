@@ -6,6 +6,7 @@ import 'package:laundry_app/providers/app_provider.dart';
 import 'package:laundry_app/presentations/screens/home/home_page.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.dart';
 import 'package:laundry_app/presentations/screens/settings/settings_page.dart';
+import 'package:laundry_app/presentations/widgets/laundry_toast.dart';
 
 class NavigationController extends ConsumerStatefulWidget {
   const NavigationController({super.key});
@@ -21,6 +22,12 @@ class _NavigationControllerState extends ConsumerState<NavigationController> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is Map && args.containsKey('toastMessage')) {
+        LaundryToast.show(context, args['toastMessage']);
+      }
+    });
   }
 
   @override

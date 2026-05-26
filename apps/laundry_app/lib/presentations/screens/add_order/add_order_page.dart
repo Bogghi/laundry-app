@@ -63,6 +63,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                       context,
                       Routes.home,
                       (route) => false,
+                      arguments: {'toastMessage': 'Ordine salvato'},
                     );
                   }
                 } finally {
