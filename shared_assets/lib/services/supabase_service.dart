@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'repositories/orders_repository.dart';
 import 'repositories/clients_repository.dart';
 import 'repositories/items_repository.dart';
+import 'repositories/order_items_repository.dart';
 
 class SupabaseService {
   final SupabaseClient _client;
@@ -10,11 +11,13 @@ class SupabaseService {
   late final OrdersRepository orders;
   late final ClientsRepository users;
   late final ItemsRepository items;
+  late final OrderItemsRepository orderItems;
 
   SupabaseService._(this._client) {
     orders = OrdersRepository(_client);
     users = ClientsRepository(_client);
     items = ItemsRepository(_client);
+    orderItems = OrderItemsRepository(_client);
   }
 
   static SupabaseService? _instance;

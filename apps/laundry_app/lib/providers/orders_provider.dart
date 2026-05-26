@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shared_assets/models/order_model.dart';
+import 'package:shared_assets/models/order_item_model.dart';
 import 'package:shared_assets/models/client_model.dart';
 import 'package:shared_assets/services/supabase_service.dart';
 
@@ -86,6 +87,15 @@ class OrdersProvider extends Notifier<OrdersState> {
         deliveryDate: state.deliveryDate,
       );
       final OrderModel savedOrder = await SupabaseService.instance.orders.create(newOrder);
+
+      await Future.wait(state.selectedItems.entries.map((entry) {
+        return SupabaseService.instance.orderItems.create(OrderItemModel(
+          orderId: savedOrder.id,
+          itemId: entry.key,
+          quantity: entry.value,
+        ));
+      }));
+
       state = state.copyWith(
         currOrders: SupabaseService.instance.orders.getAll()
       );

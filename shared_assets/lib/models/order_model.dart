@@ -1,3 +1,6 @@
+import 'package:shared_assets/models/client_model.dart';
+import 'package:shared_assets/models/order_item_model.dart';
+
 class OrderModel {
   final int? id;
   final String orderNumber;
@@ -6,6 +9,8 @@ class OrderModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deliveryDate;
+  final ClientModel? client;
+  final List<OrderItemModel> orderItems;
 
   OrderModel({
     this.id,
@@ -15,6 +20,8 @@ class OrderModel {
     this.createdAt,
     this.updatedAt,
     this.deliveryDate,
+    this.client,
+    this.orderItems = const [],
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +33,12 @@ class OrderModel {
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
       updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
       deliveryDate: json['delivery_date'] != null ? DateTime.parse(json['delivery_date'] as String) : null,
+      client: json['clients'] != null
+          ? ClientModel.fromJson(json['clients'] as Map<String, dynamic>)
+          : null,
+      orderItems: (json['order_items'] as List<dynamic>? ?? [])
+          .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 

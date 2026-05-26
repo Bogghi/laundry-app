@@ -8,12 +8,13 @@ class OrdersRepository {
   OrdersRepository(this._client);
 
   Future<List<OrderModel>> getAll() async {
-    final data = await _client.from('orders').select();
+    final data = await _client.from('orders').select('*, clients(*), order_items(*, items(*))');
+
     return data.map((json) => OrderModel.fromJson(json)).toList();
   }
 
   Future<OrderModel?> getById(int id) async {
-    final data = await _client.from('orders').select().eq('id', id).maybeSingle();
+    final data = await _client.from('orders').select('*, clients(*), order_items(*, items(*))').eq('id', id).maybeSingle();
     if (data == null) return null;
     return OrderModel.fromJson(data);
   }
@@ -26,7 +27,7 @@ class OrdersRepository {
     final data = await _client
         .from('orders')
         .insert(orderJson)
-        .select()
+        .select('*, clients(*), order_items(*, items(*))')
         .single();
     return OrderModel.fromJson(data);
   }
@@ -36,7 +37,7 @@ class OrdersRepository {
         .from('orders')
         .update(order.toJson())
         .eq('id', order.id as Object)
-        .select()
+        .select('*, clients(*), order_items(*, items(*))')
         .single();
     return OrderModel.fromJson(data);
   }

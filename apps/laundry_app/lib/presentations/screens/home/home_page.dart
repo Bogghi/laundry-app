@@ -39,7 +39,7 @@ class HomePage extends ConsumerWidget {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: OrderCard(),
+                child: OrderCard(order: orders[index]),
               );
             },
           );
