@@ -40,29 +40,29 @@ class HomePage extends ConsumerWidget {
               ref.read(ordersProvider.notifier).fetchOrders();
               await ref.read(ordersProvider).currOrders;
             },
-            child: orders.isEmpty
-                ? ListView(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: Center(
-                          child: Text(
-                            "No orders yet",
-                            style: TextStyle(color: Color.fromRGBO(65, 71, 80, 100)),
-                          ),
-                        ),
+            child: orders.isEmpty ?
+              ListView(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Center(
+                      child: Text(
+                        "No orders yet",
+                        style: TextStyle(color: Color.fromRGBO(65, 71, 80, 100)),
                       ),
-                    ],
-                  )
-                : ListView.builder(
-                    itemCount: orders.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: OrderCard(order: orders[index]),
-                      );
-                    },
+                    ),
                   ),
+                ],
+              ) :
+              ListView.builder(
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: OrderCard(order: orders[index]),
+                  );
+                },
+              ),
           );
         }
       )
