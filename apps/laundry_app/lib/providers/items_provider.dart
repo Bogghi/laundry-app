@@ -5,16 +5,24 @@ import 'package:shared_assets/services/supabase_service.dart';
 
 class ItemsState {
   final Future<List<ItemModel>>? currItems;
+  final bool isLoading;
+  final String? errorMessage;
 
   ItemsState({
     required this.currItems,
+    this.isLoading = false,
+    this.errorMessage,
   });
 
   ItemsState copyWith({
     Future<List<ItemModel>>? currItems,
+    bool? isLoading,
+    String? errorMessage,
   }) {
     return ItemsState(
       currItems: currItems ?? this.currItems,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage,
     );
   }
 }
@@ -29,6 +37,42 @@ class ItemsProvider extends Notifier<ItemsState> {
   void fetchItems() {
     state = state.copyWith(currItems: SupabaseService.instance.items.getAll());
   }
+
+  Future<void> createItem(String name) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    try {
+      final newItem = ItemModel(
+        id: 0,
+        laundryId: 1,
+        name: name.trim(),
+        createdAt: DateTime.now(),
+      );
+      await SupabaseService.instance.items.create(newItem);
+      state = state.copyWith(
+        isLoading: false,
+        currItems: SupabaseService.instance.items.getAll(),
+      );
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteItem(int id) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    try {
+      await SupabaseService.instance.items.delete(id);
+      state = state.copyWith(
+        isLoading: false,
+        currItems: SupabaseService.instance.items.getAll(),
+      );
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      rethrow;
+    }
+  }
 }
 
-final itemsProvider = NotifierProvider<ItemsProvider, ItemsState>(ItemsProvider.new);
+final itemsProvider = NotifierProvider<ItemsProvider, ItemsState>(
+  ItemsProvider.new,
+);
