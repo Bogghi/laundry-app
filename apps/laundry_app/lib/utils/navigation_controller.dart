@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:laundry_app/app_theme.dart';
-import 'package:laundry_app/providers/app_provider.dart';
 import 'package:laundry_app/presentations/screens/home/home_page.dart';
-import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.dart';
-import 'package:laundry_app/presentations/screens/settings/settings_page.dart';
 import 'package:laundry_app/presentations/widgets/laundry_toast.dart';
 
-class NavigationController extends ConsumerStatefulWidget {
+class NavigationController extends StatefulWidget {
   const NavigationController({super.key});
 
   @override
-  ConsumerState<NavigationController> createState() => _NavigationControllerState();
+  State<NavigationController> createState() => _NavigationControllerState();
 }
 
-class _NavigationControllerState extends ConsumerState<NavigationController> {
-  late PageController _pageController;
-
+class _NavigationControllerState extends State<NavigationController> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args is Map && args.containsKey('toastMessage')) {
@@ -31,61 +23,9 @@ class _NavigationControllerState extends ConsumerState<NavigationController> {
   }
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final appState = ref.watch(appProvider);
-    final appStoreProvider = ref.read(appProvider.notifier);
-
-    return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: Colors.white,
-        indicatorColor: AppTheme.appbarSelectedColor,
-        onDestinationSelected: (int index) {
-          _pageController.jumpToPage(index);
-          appStoreProvider.changePage(index);
-        },
-        selectedIndex: appState.currentIndex,
-        destinations: [
-          NavigationDestination(
-            selectedIcon: Icon(
-              color: Theme.of(context).colorScheme.primary,
-              Icons.list_outlined
-            ),
-            icon: Icon(Icons.list_outlined),
-            label: 'Ordini',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.settings),
-            icon: Icon(Icons.settings),
-            label: 'Impostazioni',
-          ),
-        ],
-      ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          appStoreProvider.changePage(index);
-        },
-        children: [
-          HomePage(),
-          SettingsPage(),
-        ],
-      ),
-      floatingActionButton: _buildFloatingActionButton(appState.currentIndex),
+    return const Scaffold(
+      body: HomePage(),
     );
-  }
-
-  Widget? _buildFloatingActionButton(int currentIndex) {
-    switch (currentIndex) {
-      case 0:
-        return const AddOrderAction();
-      default:
-        return null;
-    }
   }
 }

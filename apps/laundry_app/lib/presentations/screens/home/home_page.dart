@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_assets/icons/washer_icon.dart';
 
 import 'package:laundry_app/providers/orders_provider.dart';
+import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
+import 'package:laundry_app/utils/routes.dart';
 
 
 class HomePage extends ConsumerWidget {
@@ -25,6 +27,26 @@ class HomePage extends ConsumerWidget {
             LaundryTitle(text: "Pristine"),
           ],
         )
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const SizedBox(height: 80),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: const LaundryTitle(text: "Pristine"),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Impostazioni'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.settings);
+              },
+            ),
+          ],
+        ),
       ),
       body: FutureBuilder(
         future: orderState.currOrders,
@@ -65,7 +87,8 @@ class HomePage extends ConsumerWidget {
               ),
           );
         }
-      )
+      ),
+      floatingActionButton: const AddOrderAction(),
     );
   }
 }
