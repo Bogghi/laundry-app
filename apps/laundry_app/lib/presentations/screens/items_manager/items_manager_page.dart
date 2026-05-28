@@ -72,11 +72,11 @@ class _ItemsManagerPageState extends ConsumerState<ItemsManagerPage> {
                           try {
                             await ref
                                 .read(itemsProvider.notifier)
-                                .deleteItem(item.id);
+                                .deleteItem(item);
                             if (mounted) {
                               LaundryToast.show(ctx, "Capo eliminato");
                             }
-                          } catch (_) {
+                          } catch (e, stackTrace) {
                             if (mounted) {
                               LaundryToast.show(ctx, "Errore eliminazione");
                             }

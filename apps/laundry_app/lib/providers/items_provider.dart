@@ -58,10 +58,13 @@ class ItemsProvider extends Notifier<ItemsState> {
     }
   }
 
-  Future<void> deleteItem(int id) async {
+  Future<void> deleteItem(ItemModel item) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
+    Map<String, dynamic> itemData = item.toJson();
+    itemData['deleted'] = true;
+    ItemModel deletedItem = ItemModel.fromJson(itemData);
     try {
-      await SupabaseService.instance.items.delete(id);
+      await SupabaseService.instance.items.update(deletedItem);
       state = state.copyWith(
         isLoading: false,
         currItems: SupabaseService.instance.items.getAll(),

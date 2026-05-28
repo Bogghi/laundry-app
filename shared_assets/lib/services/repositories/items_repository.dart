@@ -8,7 +8,7 @@ class ItemsRepository {
   ItemsRepository(this._client);
 
   Future<List<ItemModel>> getAll() async {
-    final data = await _client.from('items').select();
+    final data = await _client.from('items').select().eq('deleted', false);
     return data.map((json) => ItemModel.fromJson(json)).toList();
   }
 
@@ -35,9 +35,5 @@ class ItemsRepository {
         .select()
         .single();
     return ItemModel.fromJson(data);
-  }
-
-  Future<void> delete(int id) async {
-    await _client.from('items').delete().eq('id', id);
   }
 }

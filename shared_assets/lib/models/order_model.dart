@@ -1,6 +1,8 @@
 import 'package:shared_assets/models/client_model.dart';
 import 'package:shared_assets/models/order_item_model.dart';
 
+enum OrderStatus { doing, completed, deleted }
+
 class OrderModel {
   final int? id;
   final String orderNumber;
@@ -11,6 +13,7 @@ class OrderModel {
   final DateTime? deliveryDate;
   final ClientModel? client;
   final List<OrderItemModel> orderItems;
+  final OrderStatus status;
 
   OrderModel({
     this.id,
@@ -22,6 +25,7 @@ class OrderModel {
     this.deliveryDate,
     this.client,
     this.orderItems = const [],
+    this.status = OrderStatus.doing,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -39,6 +43,9 @@ class OrderModel {
       orderItems: (json['order_items'] as List<dynamic>? ?? [])
           .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      status: json['status'] != null
+          ? OrderStatus.values.byName(json['status'] as String)
+          : OrderStatus.doing,
     );
   }
 
@@ -51,6 +58,7 @@ class OrderModel {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'delivery_date': deliveryDate?.toIso8601String(),
+      'status': status.name,
     };
   }
 }

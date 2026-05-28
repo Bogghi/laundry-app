@@ -104,8 +104,7 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
-                                onPressed: () =>
-                                    ref.read(ordersProvider.notifier).addItem(item.id),
+                                onPressed: () => ref.read(ordersProvider.notifier).addItem(item.id),
                                 child: const Text("AGGIUNGI"),
                               ),
                               ElevatedButton(
