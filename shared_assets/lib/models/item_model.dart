@@ -5,6 +5,7 @@ class ItemModel {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final bool deleted;
+  final String iconName;
 
   ItemModel({
     required this.id,
@@ -13,6 +14,7 @@ class ItemModel {
     required this.createdAt,
     this.updatedAt,
     this.deleted = false,
+    required this.iconName,
   });
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class ItemModel {
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
       deleted: json['deleted'] as bool? ?? false,
+      iconName: json['icon_name'] as String,
     );
   }
 
@@ -34,6 +37,7 @@ class ItemModel {
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'deleted': deleted,
+      'icon_name': iconName,
     };
   }
 }

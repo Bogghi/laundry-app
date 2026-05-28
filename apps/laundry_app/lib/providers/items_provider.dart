@@ -46,6 +46,8 @@ class ItemsProvider extends Notifier<ItemsState> {
         laundryId: 1,
         name: name.trim(),
         createdAt: DateTime.now(),
+        // placeholder until finish of the add item page
+        iconName: 'strokeRoundedSuit01'
       );
       await SupabaseService.instance.items.create(newItem);
       state = state.copyWith(

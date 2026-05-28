@@ -71,6 +71,10 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: borderRadius,
+                      border: Border.all(
+                        color: Colors.grey.shade400,
+                        width: 1,
+                      ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

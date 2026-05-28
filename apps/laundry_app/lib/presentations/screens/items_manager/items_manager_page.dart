@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import 'package:shared_assets/models/item_model.dart';
 
+import 'package:laundry_app/utils/huge_icons_map.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
@@ -51,39 +53,67 @@ class _ItemsManagerPageState extends ConsumerState<ItemsManagerPage> {
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: borderRadius,
+                    border: Border.all(
+                      color: Colors.grey.shade400,
+                      width: 1,
+                    ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 8,
-                    children: [
-                      Icon(Icons.checkroom, size: 40, color: Colors.grey[800]),
-                      Text(
-                        item.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.red,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 20,
+                      children: [
+                        HugeIcon(
+                          icon: hugeIconsMap[item.iconName]!,
+                          size: 40,
+                          color: Colors.grey[800],
                         ),
-                        onPressed: () async {
-                          final ctx = context;
-                          try {
-                            await ref
+                        Text(
+                          item.name,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: () async {
+                            final ctx = context;
+                            try {
+                              await ref
                                 .read(itemsProvider.notifier)
                                 .deleteItem(item);
-                            if (mounted) {
-                              LaundryToast.show(ctx, "Capo eliminato");
+                              if (mounted) {
+                                LaundryToast.show(ctx, "Capo eliminato");
+                              }
+                            } catch (e) {
+                              if (mounted) {
+                                LaundryToast.show(ctx, "Errore eliminazione");
+                              }
                             }
-                          } catch (e, stackTrace) {
-                            if (mounted) {
-                              LaundryToast.show(ctx, "Errore eliminazione");
-                            }
-                          }
-                        },
-                      ),
-                    ],
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.delete_outline,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                style: TextStyle(
+                                  color: Colors.white
+                                ),
+                                "Elimina",
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

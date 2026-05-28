@@ -29,6 +29,13 @@ class LaundryCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       color: Colors.white,
       shadowColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: Colors.grey.shade400,
+          width: 1,
+        ),
+      ),
       child: Padding(
         padding: padding!,
         child: Column(

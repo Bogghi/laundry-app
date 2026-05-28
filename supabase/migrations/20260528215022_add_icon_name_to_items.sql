@@ -1,0 +1,1 @@
+ALTER TABLE items ADD COLUMN icon_name text default 'strokeRoundedSuit01';
