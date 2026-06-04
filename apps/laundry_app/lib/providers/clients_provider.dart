@@ -5,16 +5,24 @@ import 'package:shared_assets/services/supabase_service.dart';
 
 class ClientsState {
   final Future<List<ClientModel>>? currUsers;
+  final String? clientName;
+  final int? phoneNumber;
 
   ClientsState({
     required this.currUsers,
+    this.clientName,
+    this.phoneNumber,
   });
 
   ClientsState copyWith({
     Future<List<ClientModel>>? currUsers,
+    String? clientName,
+    int? phoneNumber,
   }) {
     return ClientsState(
       currUsers: currUsers ?? this.currUsers,
+      clientName: clientName ?? this.clientName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
     );
   }
 }

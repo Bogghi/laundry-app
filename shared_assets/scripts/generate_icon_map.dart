@@ -57,7 +57,7 @@ void main() async {
     ..writeln()
     ..writeln('List<List<dynamic>>? getHugeIconByName(String? name) => name == null ? null : hugeIconsMap[name];');
 
-  final outputFile = File('apps/laundry_app/lib/utils/huge_icons_map.dart');
+  final outputFile = File('lib/utils/huge_icons_map.dart');
   await outputFile.writeAsString(buffer.toString());
 
   print('Generated ${outputFile.path} with ${iconNames.length} icons.');

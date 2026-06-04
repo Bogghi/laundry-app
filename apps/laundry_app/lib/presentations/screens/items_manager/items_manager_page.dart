@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import 'package:shared_assets/models/item_model.dart';
+import 'package:shared_assets/utils/huge_icons_map.dart';
 
-import 'package:laundry_app/utils/huge_icons_map.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';

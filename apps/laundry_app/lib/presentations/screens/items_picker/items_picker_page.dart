@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import 'package:shared_assets/models/item_model.dart';
+import 'package:shared_assets/utils/huge_icons_map.dart';
 
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
@@ -80,7 +82,11 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 8,
                       children: [
-                        Icon(Icons.checkroom, size: 40, color: Colors.grey[800]),
+                        HugeIcon(
+                          icon: hugeIconsMap[item.iconName]!,
+                          size: 40,
+                          color: Colors.grey[800],
+                        ),
                         Text(
                           item.name,
                           textAlign: TextAlign.center,

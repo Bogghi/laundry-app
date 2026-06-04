@@ -137,6 +137,7 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                 title: "numero ordine",
                 child: TextFormField(
                   controller: orderNumberController,
+                  keyboardType: TextInputType.number,
                   onChanged: (value) {
                     ref.read(ordersProvider.notifier).setOrderNumber(value);
                   },
