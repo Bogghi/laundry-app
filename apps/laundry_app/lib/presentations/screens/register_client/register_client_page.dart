@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shared_assets/models/client_model.dart';
+
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
@@ -17,11 +19,12 @@ class RegisterClientPage extends ConsumerStatefulWidget {
 class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
   late TextEditingController clientNameController;
   late TextEditingController phoneNumberController;
+  bool _isSaving = false;
 
   @override
   void initState() {
     clientNameController = TextEditingController(text: ref.read(clientsProvider).clientName);
-    phoneNumberController = TextEditingController(text: ref.read(clientsProvider).phoneNumber.toString());
+    phoneNumberController = TextEditingController(text: ref.read(clientsProvider).phoneNumber?.toString() ?? '');
     super.initState();
   }
 
@@ -43,11 +46,30 @@ class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
-              onPressed: () {},
-              child: Icon(
-                Icons.check,
-                color: Theme.of(context).colorScheme.onPrimary,
-              )
+              onPressed: _isSaving ? null : () async {
+                setState(() => _isSaving = true);
+                try {
+                  final ClientModel savedClient = await ref.read(clientsProvider.notifier).saveClient();
+                  if (mounted) {
+                    Navigator.pop(context, savedClient);
+                  }
+                } finally {
+                  if (mounted) setState(() => _isSaving = false);
+                }
+              },
+              child: _isSaving
+                ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                )
+                : Icon(
+                  Icons.check,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
             ),
           ),
         ],
@@ -60,6 +82,9 @@ class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
               title: "Nome Cliente",
               child: TextFormField(
                 controller: clientNameController,
+                onChanged: (value) {
+                  ref.read(clientsProvider.notifier).setClientName(value);
+                },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   border: InputBorder.none,
@@ -76,6 +101,9 @@ class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
               child: TextFormField(
                 controller: phoneNumberController,
                 keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  ref.read(clientsProvider.notifier).setPhoneNumber(int.tryParse(value));
+                },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   border: InputBorder.none,

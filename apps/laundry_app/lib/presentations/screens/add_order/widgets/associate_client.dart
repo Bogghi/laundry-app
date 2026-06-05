@@ -64,8 +64,15 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(Routes.registerClient);
+                    onPressed: () async {
+                      final result = await Navigator.of(context).pushNamed(Routes.registerClient);
+                      if (result is ClientModel && context.mounted) {
+                        setState(() {
+                          client = result;
+                          _controller.text = result.name;
+                        });
+                        widget.onSelectedClient(result);
+                      }
                     },
                     child: Icon(Icons.add, size: 20),
                   )

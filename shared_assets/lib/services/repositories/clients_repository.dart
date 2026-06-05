@@ -18,22 +18,26 @@ class ClientsRepository {
     return ClientModel.fromJson(data);
   }
 
-  Future<ClientModel> create(ClientModel user) async {
+  Future<ClientModel> update(ClientModel user) async {
     final data = await _client
         .from('clients')
-        .insert(user.toJson())
+        .update(user.toJson())
+        .eq('id', user.id!)
         .select()
         .single();
     return ClientModel.fromJson(data);
   }
 
-  Future<ClientModel> update(ClientModel user) async {
+  Future<ClientModel> create(ClientModel client) async {
+    final clientJson = client.toJson();
+    clientJson.remove('id');
+    clientJson.remove('created_at');
+    clientJson.remove('updated_at');
     final data = await _client
-        .from('clients')
-        .update(user.toJson())
-        .eq('id', user.id)
-        .select()
-        .single();
+      .from('clients')
+      .insert(clientJson)
+      .select()
+      .single();
     return ClientModel.fromJson(data);
   }
 }

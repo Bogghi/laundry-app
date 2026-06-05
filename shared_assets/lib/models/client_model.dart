@@ -1,7 +1,7 @@
 enum ClientStatus { active, deleted }
 
 class ClientModel {
-  final int id;
+  final int? id;
   final String name;
   final int phoneNumber;
   final DateTime? createdAt;
@@ -9,11 +9,11 @@ class ClientModel {
   final ClientStatus status;
 
   ClientModel({
-    required this.id,
+    this.id,
     required this.name,
     required this.phoneNumber,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
     this.status = ClientStatus.active,
   });
 

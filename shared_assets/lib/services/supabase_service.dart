@@ -9,13 +9,13 @@ class SupabaseService {
   final SupabaseClient _client;
 
   late final OrdersRepository orders;
-  late final ClientsRepository users;
+  late final ClientsRepository clients;
   late final ItemsRepository items;
   late final OrderItemsRepository orderItems;
 
   SupabaseService._(this._client) {
     orders = OrdersRepository(_client);
-    users = ClientsRepository(_client);
+    clients = ClientsRepository(_client);
     items = ItemsRepository(_client);
     orderItems = OrderItemsRepository(_client);
   }

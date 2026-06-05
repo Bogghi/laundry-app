@@ -24,8 +24,6 @@ class _NavigationControllerState extends State<NavigationController> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: HomePage(),
-    );
+    return HomePage();
   }
 }
