@@ -19,6 +19,9 @@ class ClientsRepository {
   }
 
   Future<ClientModel> update(ClientModel user) async {
+    if (user.id == null) {
+      throw StateError('Cannot update a ClientModel without an id');
+    }
     final data = await _client
         .from('clients')
         .update(user.toJson())

@@ -19,7 +19,7 @@ class ClientModel {
 
   factory ClientModel.fromJson(Map<String, dynamic> json) {
     return ClientModel(
-      id: json['id'] as int,
+      id: json['id'] as int?,
       name: json['name'] as String,
       phoneNumber: json['phone_number'] as int,
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
