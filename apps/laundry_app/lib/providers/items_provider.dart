@@ -38,7 +38,7 @@ class ItemsProvider extends Notifier<ItemsState> {
     state = state.copyWith(currItems: SupabaseService.instance.items.getAll());
   }
 
-  Future<void> createItem(String name) async {
+  Future<void> createItem(String name, String iconName) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final newItem = ItemModel(
@@ -46,8 +46,7 @@ class ItemsProvider extends Notifier<ItemsState> {
         laundryId: 1,
         name: name.trim(),
         createdAt: DateTime.now(),
-        // placeholder until finish of the add item page
-        iconName: 'strokeRoundedSuit01'
+        iconName: iconName,
       );
       await SupabaseService.instance.items.create(newItem);
       state = state.copyWith(

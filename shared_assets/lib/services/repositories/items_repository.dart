@@ -19,9 +19,10 @@ class ItemsRepository {
   }
 
   Future<ItemModel> create(ItemModel item) async {
+    final json = item.toJson()..remove('id');
     final data = await _client
         .from('items')
-        .insert(item.toJson())
+        .insert(json)
         .select()
         .single();
     return ItemModel.fromJson(data);
