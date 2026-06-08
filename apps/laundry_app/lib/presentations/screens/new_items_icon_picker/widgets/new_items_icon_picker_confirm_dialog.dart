@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-import 'package:shared_assets/utils/huge_icons_map.dart';
+import 'package:shared_assets/utils/laundry_icons_map.dart';
 
 class NewItemsIconPickerConfirmDialog extends StatefulWidget {
   final String iconKey;
@@ -54,7 +54,7 @@ class _NewItemsIconPickerConfirmDialogState
         mainAxisSize: MainAxisSize.min,
         children: [
           HugeIcon(
-            icon: hugeIconsMap[widget.iconKey]!,
+            icon: laundryIconsMap[widget.iconKey]!,
             size: 64,
             color: Colors.grey[800],
           ),

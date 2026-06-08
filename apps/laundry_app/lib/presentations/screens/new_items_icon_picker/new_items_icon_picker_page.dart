@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-import 'package:shared_assets/utils/huge_icons_map.dart';
+import 'package:shared_assets/utils/laundry_icons_map.dart';
 
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
@@ -12,7 +12,7 @@ import 'package:laundry_app/presentations/screens/new_items_icon_picker/widgets/
 class NewItemsIconPickerPage extends ConsumerWidget {
   const NewItemsIconPickerPage({super.key});
 
-  static final List<String> _iconKeys = (hugeIconsMap.keys.toList()..sort());
+  static final List<String> _iconKeys = (laundryIconsMap.keys.toList()..sort());
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,7 +46,7 @@ class NewItemsIconPickerPage extends ConsumerWidget {
                 ),
                 child: Center(
                   child: HugeIcon(
-                    icon: hugeIconsMap[iconKey]!,
+                    icon: laundryIconsMap[iconKey]!,
                     size: 32,
                     color: Colors.grey[800],
                   ),
