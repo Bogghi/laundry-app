@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static final Color primaryBackgroundColor = Color.fromRGBO(248, 249, 250, 1.0);
   static final Color primaryBackgroundColorShade1 = Color.fromRGBO(209, 228, 255, 1.0);
+  static final Color primaryBackgroundColorShade2 = Color.fromRGBO(234, 241, 255, 1.0);
   static final Color appbarSelectedColor = Color.fromRGBO(239, 246, 255, 1.0);
   static final Color headlineColor = Color.fromRGBO(25, 28, 29, 1.0);
   static final Color subHeadlineColor = Color.fromRGBO(113, 119, 130, 1.0);

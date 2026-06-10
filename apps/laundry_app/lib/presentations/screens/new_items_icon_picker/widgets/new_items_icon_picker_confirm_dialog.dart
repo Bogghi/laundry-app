@@ -54,7 +54,7 @@ class _NewItemsIconPickerConfirmDialogState
         mainAxisSize: MainAxisSize.min,
         children: [
           HugeIcon(
-            icon: laundryIconsMap[widget.iconKey]!,
+            icon: laundryIconsMap[widget.iconKey]!['icon'],
             size: 64,
             color: Colors.grey[800],
           ),
