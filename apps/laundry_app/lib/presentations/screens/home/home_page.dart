@@ -47,12 +47,25 @@ class HomePage extends ConsumerWidget {
                     color: AppTheme.primaryBackgroundColorShade1,
                     borderRadius: BorderRadius.circular(20)
                 ),
-                child: LaundrySettingsRow(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(Routes.itemsManager);
-                  },
-                  hugeIcon: HugeIcons.strokeRoundedShirt01,
-                  text: "Lista capi",
+                child: Column(
+                  children: [
+                    LaundrySettingsRow(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed(Routes.itemsManager);
+                      },
+                      hugeIcon: HugeIcons.strokeRoundedShirt01,
+                      text: "Lista capi",
+                    ),
+                    LaundrySettingsRow(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed(Routes.clientsManagerPage);
+                      },
+                      hugeIcon: HugeIcons.strokeRoundedUserGroup,
+                      text: "Gestione clienti",
+                    ),
+                  ],
                 ),
               ),
             ],
