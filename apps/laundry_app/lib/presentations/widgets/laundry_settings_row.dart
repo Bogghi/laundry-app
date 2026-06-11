@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class SettingOptionRow extends StatelessWidget {
+class LaundrySettingsRow extends StatelessWidget {
   final String text;
   final List<List<dynamic>> hugeIcon;
   final VoidCallback onTap;
 
-  const SettingOptionRow({
+  const LaundrySettingsRow({
     super.key,
     required this.text,
     required this.hugeIcon,

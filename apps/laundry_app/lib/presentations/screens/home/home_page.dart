@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import 'package:shared_assets/icons/washer_icon.dart';
 
@@ -8,7 +9,9 @@ import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
+import 'package:laundry_app/presentations/widgets/laundry_settings_row.dart';
 import 'package:laundry_app/utils/routes.dart';
+import 'package:laundry_app/app_theme.dart';
 
 
 class HomePage extends ConsumerWidget {
@@ -29,23 +32,31 @@ class HomePage extends ConsumerWidget {
         )
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const SizedBox(height: 80),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: const LaundryTitle(text: "Pristine"),
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Impostazioni'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(Routes.settings);
-              },
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const SizedBox(height: 80),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: const LaundryTitle(text: "Pristine"),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: AppTheme.primaryBackgroundColorShade1,
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: LaundrySettingsRow(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(Routes.itemsManager);
+                  },
+                  hugeIcon: HugeIcons.strokeRoundedShirt01,
+                  text: "Lista capi",
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: FutureBuilder(
