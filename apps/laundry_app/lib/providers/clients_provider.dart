@@ -43,6 +43,17 @@ class ClientsProvider extends Notifier<ClientsState> {
     final ClientModel client = ClientModel(id: id, name: name, phoneNumber: phoneNumber);
     return await SupabaseService.instance.clients.update(client);
   }
+
+  Future<void> deleteClient(ClientModel client) async {
+    final ClientModel deletedClient = ClientModel(
+      id: client.id,
+      name: client.name,
+      phoneNumber: client.phoneNumber,
+      status: ClientStatus.deleted,
+    );
+    await SupabaseService.instance.clients.update(deletedClient);
+    fetchUsers();
+  }
 }
 
 final clientsProvider = NotifierProvider<ClientsProvider, ClientsState>(ClientsProvider.new);

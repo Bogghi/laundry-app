@@ -37,13 +37,16 @@ class OrderCard extends ConsumerWidget {
                     child: WashOrderIcon(),
                   )
               ),
-              Text(
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(65, 71, 80, 100)
+              Expanded(
+                child: Text(
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(65, 71, 80, 100)
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  "#${order.orderNumber} $clientString",
                 ),
-                "#${order.orderNumber} $clientString",
               )
             ],
           ),
