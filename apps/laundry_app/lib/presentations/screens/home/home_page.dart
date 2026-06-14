@@ -93,8 +93,11 @@ class HomePage extends ConsumerWidget {
                     height: MediaQuery.of(context).size.height * 0.7,
                     child: Center(
                       child: Text(
-                        "No orders yet",
-                        style: TextStyle(color: Color.fromRGBO(65, 71, 80, 100)),
+                        "Aggiungi un ordine per tenerne traccia",
+                        style: TextStyle(
+                          color: Color.fromRGBO(65, 71, 80, 100),
+                          fontSize: 20,
+                        )
                       ),
                     ),
                   ),
