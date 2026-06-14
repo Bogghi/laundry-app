@@ -60,7 +60,10 @@ class ClientsManagerPage extends ConsumerWidget {
                       padding: EdgeInsets.only(bottom: 10),
                       child: LaundryCard(
                         onTap: () {
-                          Navigator.of(context).pushNamed(Routes.clientInfo);
+                          Navigator.of(context).pushNamed(
+                            Routes.clientInfo,
+                            arguments: (client: clients[index]),
+                          );
                         },
                         child: Row(
                           spacing: 10,

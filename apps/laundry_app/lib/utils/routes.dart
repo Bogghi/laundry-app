@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:shared_assets/models/client_model.dart';
+
 import 'package:laundry_app/utils/navigation_controller.dart';
 import 'package:laundry_app/presentations/screens/loading/loading_page.dart';
 import 'package:laundry_app/presentations/screens/items_manager/items_manager_page.dart';
@@ -11,6 +13,7 @@ import 'package:laundry_app/presentations/screens/add_order/add_order_page.dart'
 import 'package:laundry_app/presentations/screens/client_info/client_info_page.dart';
 
 typedef LoadingPageArgs = ({Widget title, Future<void> Function() resolve});
+typedef ClientInfoArgs = ({ClientModel? client});
 
 class Routes {
   static const String home = '/';
@@ -32,9 +35,14 @@ class Routes {
     itemsManager: (context) => const ItemsManagerPage(),
     newItemsIconPicker: (context) => const NewItemsIconPickerPage(),
     clientsManagerPage: (context) => const ClientsManagerPage(),
+    clientInfo: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments as ClientInfoArgs?;
+      return ClientInfoPage(
+        currClient: args?.client,
+      );
+    },
 
     itemsPicker: (context) => const ItemsPickerPage(),
     addOrder: (context) => const AddOrderPage(),
-    clientInfo: (context) => const ClientInfoPage(),
   };
 }

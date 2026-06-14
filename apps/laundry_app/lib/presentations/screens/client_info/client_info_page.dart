@@ -10,7 +10,12 @@ import 'package:laundry_app/providers/clients_provider.dart';
 import 'package:laundry_app/app_theme.dart';
 
 class ClientInfoPage extends ConsumerStatefulWidget {
-  const ClientInfoPage({super.key});
+  final ClientModel? currClient;
+
+  const ClientInfoPage({
+    super.key,
+    this.currClient,
+  });
 
   @override
   ConsumerState<ClientInfoPage> createState() => _ClientInfoPageState();
@@ -23,14 +28,15 @@ class _ClientInfoPageState extends ConsumerState<ClientInfoPage> {
 
   @override
   void initState() {
-    clientNameController = TextEditingController(text: ref.read(clientsProvider).clientName);
-    phoneNumberController = TextEditingController(text: ref.read(clientsProvider).phoneNumber?.toString() ?? '');
     super.initState();
+    clientNameController = TextEditingController(text: widget.currClient?.name ?? '');
+    phoneNumberController = TextEditingController(text: widget.currClient?.phoneNumber.toString() ?? '');
   }
 
   @override
   void dispose() {
     clientNameController.dispose();
+    phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -38,7 +44,7 @@ class _ClientInfoPageState extends ConsumerState<ClientInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: LaundryTitle(text: "Nuovo Cliente"),
+        title: LaundryTitle(text: widget.currClient != null ? "Modifica Cliente" : "Nuovo Cliente"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -49,7 +55,24 @@ class _ClientInfoPageState extends ConsumerState<ClientInfoPage> {
               onPressed: _isSaving ? null : () async {
                 setState(() => _isSaving = true);
                 try {
-                  final ClientModel savedClient = await ref.read(clientsProvider.notifier).saveClient();
+                  final String name = clientNameController.text;
+                  final int phoneNumber = int.parse(phoneNumberController.text);
+                  final notifier = ref.read(clientsProvider.notifier);
+
+                  final ClientModel savedClient;
+                  if (widget.currClient == null) {
+                    savedClient = await notifier.saveClient(
+                      name: name,
+                      phoneNumber: phoneNumber,
+                    );
+                  } else {
+                    savedClient = await notifier.updateClient(
+                      id: widget.currClient!.id!,
+                      name: name,
+                      phoneNumber: phoneNumber,
+                    );
+                  }
+
                   if (mounted) {
                     Navigator.pop(context, savedClient);
                   }
@@ -82,9 +105,6 @@ class _ClientInfoPageState extends ConsumerState<ClientInfoPage> {
               title: "Nome Cliente",
               child: TextFormField(
                 controller: clientNameController,
-                onChanged: (value) {
-                  ref.read(clientsProvider.notifier).setClientName(value);
-                },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   border: InputBorder.none,
@@ -101,9 +121,6 @@ class _ClientInfoPageState extends ConsumerState<ClientInfoPage> {
               child: TextFormField(
                 controller: phoneNumberController,
                 keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  ref.read(clientsProvider.notifier).setPhoneNumber(int.tryParse(value));
-                },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   border: InputBorder.none,
