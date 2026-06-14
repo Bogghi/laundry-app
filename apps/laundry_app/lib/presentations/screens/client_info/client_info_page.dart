@@ -9,28 +9,34 @@ import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/providers/clients_provider.dart';
 import 'package:laundry_app/app_theme.dart';
 
-class RegisterClientPage extends ConsumerStatefulWidget {
-  const RegisterClientPage({super.key});
+class ClientInfoPage extends ConsumerStatefulWidget {
+  final ClientModel? currClient;
+
+  const ClientInfoPage({
+    super.key,
+    this.currClient,
+  });
 
   @override
-  ConsumerState<RegisterClientPage> createState() => _RegisterClientPageState();
+  ConsumerState<ClientInfoPage> createState() => _ClientInfoPageState();
 }
 
-class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
+class _ClientInfoPageState extends ConsumerState<ClientInfoPage> {
   late TextEditingController clientNameController;
   late TextEditingController phoneNumberController;
   bool _isSaving = false;
 
   @override
   void initState() {
-    clientNameController = TextEditingController(text: ref.read(clientsProvider).clientName);
-    phoneNumberController = TextEditingController(text: ref.read(clientsProvider).phoneNumber?.toString() ?? '');
     super.initState();
+    clientNameController = TextEditingController(text: widget.currClient?.name ?? '');
+    phoneNumberController = TextEditingController(text: widget.currClient?.phoneNumber.toString() ?? '');
   }
 
   @override
   void dispose() {
     clientNameController.dispose();
+    phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -38,7 +44,7 @@ class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: LaundryTitle(text: "Nuovo Cliente"),
+        title: LaundryTitle(text: widget.currClient != null ? "Modifica Cliente" : "Nuovo Cliente"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -49,7 +55,24 @@ class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
               onPressed: _isSaving ? null : () async {
                 setState(() => _isSaving = true);
                 try {
-                  final ClientModel savedClient = await ref.read(clientsProvider.notifier).saveClient();
+                  final String name = clientNameController.text;
+                  final int phoneNumber = int.parse(phoneNumberController.text);
+                  final notifier = ref.read(clientsProvider.notifier);
+
+                  final ClientModel savedClient;
+                  if (widget.currClient == null) {
+                    savedClient = await notifier.saveClient(
+                      name: name,
+                      phoneNumber: phoneNumber,
+                    );
+                  } else {
+                    savedClient = await notifier.updateClient(
+                      id: widget.currClient!.id!,
+                      name: name,
+                      phoneNumber: phoneNumber,
+                    );
+                  }
+
                   if (mounted) {
                     Navigator.pop(context, savedClient);
                   }
@@ -82,9 +105,6 @@ class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
               title: "Nome Cliente",
               child: TextFormField(
                 controller: clientNameController,
-                onChanged: (value) {
-                  ref.read(clientsProvider.notifier).setClientName(value);
-                },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   border: InputBorder.none,
@@ -101,9 +121,6 @@ class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
               child: TextFormField(
                 controller: phoneNumberController,
                 keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  ref.read(clientsProvider.notifier).setPhoneNumber(int.tryParse(value));
-                },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   border: InputBorder.none,
