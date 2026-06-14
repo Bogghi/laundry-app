@@ -18,10 +18,10 @@ class Routes {
   static const String itemsManager = '/itemsManager';
   static const String newItemsIconPicker = '${Routes.itemsManager}/newItemsIconPicker';
   static const String clientsManagerPage = '/clientsManagerPage';
+  static const String clientInfo = '/client_info';
 
   static const String itemsPicker = '/items_picker';
   static const String addOrder = '${Routes.itemsPicker}/add_order';
-  static const String clientInfo = '${Routes.itemsPicker}/client_info';
 
   static final Map<String, WidgetBuilder> all = {
     home: (context) => const NavigationController(),
