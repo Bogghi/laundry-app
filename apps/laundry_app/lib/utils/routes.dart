@@ -8,7 +8,7 @@ import 'package:laundry_app/presentations/screens/clients_manager/clients_manage
 
 import 'package:laundry_app/presentations/screens/items_picker/items_picker_page.dart';
 import 'package:laundry_app/presentations/screens/add_order/add_order_page.dart';
-import 'package:laundry_app/presentations/screens/register_client/register_client_page.dart';
+import 'package:laundry_app/presentations/screens/client_info/client_info_page.dart';
 
 typedef LoadingPageArgs = ({Widget title, Future<void> Function() resolve});
 
@@ -21,7 +21,7 @@ class Routes {
 
   static const String itemsPicker = '/items_picker';
   static const String addOrder = '${Routes.itemsPicker}/add_order';
-  static const String registerClient = '${Routes.itemsPicker}/register_client';
+  static const String clientInfo = '${Routes.itemsPicker}/client_info';
 
   static final Map<String, WidgetBuilder> all = {
     home: (context) => const NavigationController(),
@@ -35,6 +35,6 @@ class Routes {
 
     itemsPicker: (context) => const ItemsPickerPage(),
     addOrder: (context) => const AddOrderPage(),
-    registerClient: (context) => const RegisterClientPage(),
+    clientInfo: (context) => const ClientInfoPage(),
   };
 }

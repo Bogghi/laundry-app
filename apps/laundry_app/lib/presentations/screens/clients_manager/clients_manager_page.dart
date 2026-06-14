@@ -7,6 +7,7 @@ import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/providers/clients_provider.dart';
+import 'package:laundry_app/utils/routes.dart';
 
 class ClientsManagerPage extends ConsumerWidget {
   const ClientsManagerPage({super.key});
@@ -58,6 +59,9 @@ class ClientsManagerPage extends ConsumerWidget {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 10),
                       child: LaundryCard(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Routes.clientInfo);
+                        },
                         child: Row(
                           spacing: 10,
                           children: [

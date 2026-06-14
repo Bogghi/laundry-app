@@ -9,14 +9,14 @@ import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/providers/clients_provider.dart';
 import 'package:laundry_app/app_theme.dart';
 
-class RegisterClientPage extends ConsumerStatefulWidget {
-  const RegisterClientPage({super.key});
+class ClientInfoPage extends ConsumerStatefulWidget {
+  const ClientInfoPage({super.key});
 
   @override
-  ConsumerState<RegisterClientPage> createState() => _RegisterClientPageState();
+  ConsumerState<ClientInfoPage> createState() => _ClientInfoPageState();
 }
 
-class _RegisterClientPageState extends ConsumerState<RegisterClientPage> {
+class _ClientInfoPageState extends ConsumerState<ClientInfoPage> {
   late TextEditingController clientNameController;
   late TextEditingController phoneNumberController;
   bool _isSaving = false;
