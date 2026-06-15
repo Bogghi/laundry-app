@@ -41,7 +41,7 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                   backgroundColor: Theme.of(context).colorScheme.primary
                 ),
                 onPressed: (){
-                  Navigator.of(context).pushNamed(Routes.addOrder);
+                  Navigator.of(context).pushNamed(Routes.orderInfo);
                 },
                 child: Icon(
                   Icons.check,

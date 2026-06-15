@@ -8,19 +8,19 @@ import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_scaffold_padding.dart';
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
 import 'package:laundry_app/presentations/widgets/laundry_display_list.dart';
-import 'package:laundry_app/presentations/screens/add_order/widgets/section_title.dart';
-import 'package:laundry_app/presentations/screens/add_order/widgets/associate_client.dart';
+import 'package:laundry_app/presentations/screens/order_info/widgets/section_title.dart';
+import 'package:laundry_app/presentations/screens/order_info/widgets/associate_client.dart';
 import 'package:laundry_app/providers/items_provider.dart';
 import 'package:laundry_app/providers/orders_provider.dart';
 
-class AddOrderPage extends ConsumerStatefulWidget {
-  const AddOrderPage({super.key});
+class OrderInfoPage extends ConsumerStatefulWidget {
+  const OrderInfoPage({super.key});
 
   @override
-  ConsumerState<AddOrderPage> createState() => _AddOrderPageState();
+  ConsumerState<OrderInfoPage> createState() => _OrderInfoPageState();
 }
 
-class _AddOrderPageState extends ConsumerState<AddOrderPage> {
+class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
   late TextEditingController orderNumberController;
   final FocusNode _clientFocusNode = FocusNode();
   bool _isSaving = false;

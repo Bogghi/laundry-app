@@ -7,9 +7,9 @@ import 'package:laundry_app/presentations/screens/loading/loading_page.dart';
 import 'package:laundry_app/presentations/screens/items_manager/items_manager_page.dart';
 import 'package:laundry_app/presentations/screens/new_items_icon_picker/new_items_icon_picker_page.dart';
 import 'package:laundry_app/presentations/screens/clients_manager/clients_manager_page.dart';
+import 'package:laundry_app/presentations/screens/order_info/order_info_page.dart';
 
 import 'package:laundry_app/presentations/screens/items_picker/items_picker_page.dart';
-import 'package:laundry_app/presentations/screens/add_order/add_order_page.dart';
 import 'package:laundry_app/presentations/screens/client_info/client_info_page.dart';
 
 typedef LoadingPageArgs = ({Widget title, Future<void> Function() resolve});
@@ -22,9 +22,8 @@ class Routes {
   static const String newItemsIconPicker = '${Routes.itemsManager}/newItemsIconPicker';
   static const String clientsManagerPage = '/clientsManagerPage';
   static const String clientInfo = '/client_info';
-
+  static const String orderInfo = '/order_info';
   static const String itemsPicker = '/items_picker';
-  static const String addOrder = '${Routes.itemsPicker}/add_order';
 
   static final Map<String, WidgetBuilder> all = {
     home: (context) => const NavigationController(),
@@ -41,8 +40,7 @@ class Routes {
         currClient: args?.client,
       );
     },
-
+    orderInfo: (context) => const OrderInfoPage(),
     itemsPicker: (context) => const ItemsPickerPage(),
-    addOrder: (context) => const AddOrderPage(),
   };
 }

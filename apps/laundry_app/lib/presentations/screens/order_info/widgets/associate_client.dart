@@ -4,7 +4,7 @@ import 'package:shared_assets/models/client_model.dart';
 
 import 'package:laundry_app/providers/clients_provider.dart';
 import 'package:laundry_app/app_theme.dart';
-import 'package:laundry_app/presentations/screens/add_order/widgets/user_row.dart';
+import 'package:laundry_app/presentations/screens/order_info/widgets/user_row.dart';
 import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/presentations/widgets/laundry_sub_heading.dart';
