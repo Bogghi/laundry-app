@@ -66,11 +66,41 @@ class OrdersProvider extends Notifier<OrdersState> {
   }
 
   void setOrderClient(ClientModel? client) {
-    state = state.copyWith(orderClient: client);
+    // Build a fresh state directly: copyWith uses `?? this.x`, so it cannot
+    // clear a nullable field back to null.
+    state = OrdersState(
+      currOrders: state.currOrders,
+      selectedItems: state.selectedItems,
+      orderClient: client,
+      deliveryDate: state.deliveryDate,
+      orderNumber: state.orderNumber,
+    );
   }
 
   void setDeliveryDate(DateTime? date) {
-    state = state.copyWith(deliveryDate: date);
+    // Build a fresh state directly so a null date actually clears the field.
+    state = OrdersState(
+      currOrders: state.currOrders,
+      selectedItems: state.selectedItems,
+      orderClient: state.orderClient,
+      deliveryDate: date,
+      orderNumber: state.orderNumber,
+    );
+  }
+
+  void loadOrder(OrderModel order) {
+    final Map<int, int> selectedItems = {
+      for (final orderItem in order.orderItems)
+        if (orderItem.itemId != null) orderItem.itemId!: orderItem.quantity ?? 0,
+    };
+
+    state = OrdersState(
+      currOrders: state.currOrders,
+      selectedItems: selectedItems,
+      orderClient: order.client,
+      deliveryDate: order.deliveryDate,
+      orderNumber: order.orderNumber,
+    );
   }
 
   void setOrderNumber(String number) {
@@ -106,9 +136,28 @@ class OrdersProvider extends Notifier<OrdersState> {
     }
   }
 
-  void clearNewOrder() {
+  Future<OrderModel> updateOrder(OrderModel original) async {
+    final OrderModel updated = OrderModel(
+      id: original.id,
+      orderNumber: state.orderNumber,
+      clientId: state.orderClient?.id,
+      laundryId: original.laundryId,
+      deliveryDate: state.deliveryDate,
+      status: original.status,
+    );
+    final OrderModel saved = await SupabaseService.instance.orders.update(updated);
+
     state = state.copyWith(
-      selectedItems: {},
+      currOrders: SupabaseService.instance.orders.getAll(),
+    );
+    return saved;
+  }
+
+  void clearNewOrder() {
+    // Build a fresh state directly so the nullable client/date are truly cleared.
+    state = OrdersState(
+      currOrders: state.currOrders,
+      selectedItems: const {},
       orderClient: null,
       deliveryDate: null,
       orderNumber: '',

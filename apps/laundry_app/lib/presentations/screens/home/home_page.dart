@@ -111,7 +111,11 @@ class HomePage extends ConsumerWidget {
                     child: OrderCard(
                       order: orders[index],
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.orderInfo);
+                        ref.read(ordersProvider.notifier).loadOrder(orders[index]);
+                        Navigator.of(context).pushNamed(
+                          Routes.orderInfo,
+                          arguments: (order: orders[index]),
+                        );
                       },
                     ),
                   );

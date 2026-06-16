@@ -14,12 +14,14 @@ class AssociateClient extends ConsumerStatefulWidget {
   final ValueChanged<ClientModel> onSelectedClient;
   final VoidCallback? onClearedClient;
   final FocusNode? focusNode;
+  final ClientModel? initialClient;
 
   const AssociateClient({
     super.key,
     required this.onSelectedClient,
     this.onClearedClient,
     this.focusNode,
+    this.initialClient,
   });
 
   @override
@@ -32,6 +34,15 @@ class _AssociateClientState extends ConsumerState<AssociateClient> {
   FocusNode? _ownedFocusNode;
 
   FocusNode get _focusNode => widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
+
+  @override
+  void initState() {
+    super.initState();
+    client = widget.initialClient;
+    if (widget.initialClient != null) {
+      _controller.text = widget.initialClient!.name;
+    }
+  }
 
   @override
   void dispose() {

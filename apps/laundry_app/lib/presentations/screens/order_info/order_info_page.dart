@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shared_assets/models/order_model.dart';
+
 import 'package:laundry_app/utils/routes.dart';
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
@@ -14,7 +16,9 @@ import 'package:laundry_app/providers/items_provider.dart';
 import 'package:laundry_app/providers/orders_provider.dart';
 
 class OrderInfoPage extends ConsumerStatefulWidget {
-  const OrderInfoPage({super.key});
+  final OrderModel? order;
+
+  const OrderInfoPage({super.key, this.order});
 
   @override
   ConsumerState<OrderInfoPage> createState() => _OrderInfoPageState();
@@ -28,6 +32,8 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
   @override
   void initState() {
     super.initState();
+    // The order (if any) is loaded into ordersProvider by the caller before
+    // navigation, so the provider already holds the values to display here.
     orderNumberController = TextEditingController(text: ref.read(ordersProvider).orderNumber);
   }
 
@@ -45,7 +51,7 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: LaundryTitle(text: "Nuovo ordine"),
+        title: LaundryTitle(text: widget.order != null ? "Modifica ordine" : "Nuovo ordine"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -56,14 +62,21 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
               onPressed: _isSaving ? null : () async {
                 setState(() => _isSaving = true);
                 try {
-                  await ref.read(ordersProvider.notifier).saveOrder();
+                  final bool isEditing = widget.order != null;
+                  if (isEditing) {
+                    await ref.read(ordersProvider.notifier).updateOrder(widget.order!);
+                  } else {
+                    await ref.read(ordersProvider.notifier).saveOrder();
+                  }
                   ref.read(ordersProvider.notifier).clearNewOrder();
                   if (mounted) {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       Routes.home,
                       (route) => false,
-                      arguments: {'toastMessage': 'Ordine salvato'},
+                      arguments: {
+                        'toastMessage': isEditing ? 'Ordine aggiornato' : 'Ordine salvato',
+                      },
                     );
                   }
                 } finally {
@@ -158,6 +171,7 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
               ),
               AssociateClient(
                 focusNode: _clientFocusNode,
+                initialClient: widget.order?.client,
                 onSelectedClient: (client) {
                   ref.read(ordersProvider.notifier).setOrderClient(client);
                 },
