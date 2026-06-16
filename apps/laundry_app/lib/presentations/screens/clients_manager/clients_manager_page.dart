@@ -98,62 +98,70 @@ class _ClientsManagerPageState extends ConsumerState<ClientsManagerPage> {
                     final client = clients[index];
                     return Padding(
                       padding: EdgeInsets.only(bottom: 10),
-                      child: Dismissible(
-                        key: ValueKey(client.id),
-                        direction: DismissDirection.endToStart,
-                        background: const SizedBox.shrink(),
-                        secondaryBackground: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade600,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 24),
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedDelete02,
-                            color: Colors.white,
-                          ),
-                        ),
-                        confirmDismiss: (direction) async {
-                          return await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Eliminare cliente?"),
-                              content: Text(
-                                "Vuoi eliminare ${client.name}? "
-                                "Questa azione non può essere annullata.",
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text("Annulla"),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
-                                  child: Text(
-                                    "Elimina",
-                                    style: TextStyle(color: Colors.red.shade600),
-                                  ),
-                                ),
-                              ],
                             ),
-                          );
-                        },
-                        onDismissed: (direction) {
-                          setState(() => _dismissedIds.add(client.id!));
-                          ref.read(clientsProvider.notifier).deleteClient(client);
-                          LaundryToast.show(context, "Cliente ${client.name} eliminato");
-                        },
-                        child: LaundryCard(
-                          onTap: () => _openEditClient(client),
-                          child: Row(
-                            spacing: 10,
-                            children: [
-                              HugeIcon(icon: HugeIcons.strokeRoundedUserCircle),
-                              Text(client.name),
-                            ],
                           ),
-                        ),
+                          Dismissible(
+                            key: ValueKey(client.id),
+                            direction: DismissDirection.endToStart,
+                            background: const SizedBox.shrink(),
+                            secondaryBackground: Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 24),
+                              child: HugeIcon(
+                                icon: HugeIcons.strokeRoundedDelete02,
+                                color: Colors.white,
+                              ),
+                            ),
+                            confirmDismiss: (direction) async {
+                              return await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Eliminare cliente?"),
+                                  content: Text(
+                                    "Vuoi eliminare ${client.name}? "
+                                        "Questa azione non può essere annullata.",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                      child: const Text("Annulla"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(true),
+                                      child: Text(
+                                        "Elimina",
+                                        style: TextStyle(color: Colors.red.shade600),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            onDismissed: (direction) {
+                              setState(() => _dismissedIds.add(client.id!));
+                              ref.read(clientsProvider.notifier).deleteClient(client);
+                              LaundryToast.show(context, "Cliente ${client.name} eliminato");
+                            },
+                            child: LaundryCard(
+                              onTap: () => _openEditClient(client),
+                              child: Row(
+                                spacing: 10,
+                                children: [
+                                  HugeIcon(icon: HugeIcons.strokeRoundedUserCircle),
+                                  Text(client.name),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]
                       ),
                     );
                   }
