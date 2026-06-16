@@ -108,7 +108,12 @@ class HomePage extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: OrderCard(order: orders[index]),
+                    child: OrderCard(
+                      order: orders[index],
+                      onTap: () {
+                        Navigator.of(context).pushNamed(Routes.orderInfo);
+                      },
+                    ),
                   );
                 },
               ),

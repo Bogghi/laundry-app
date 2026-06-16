@@ -9,18 +9,23 @@ import 'package:laundry_app/presentations/widgets/laundry_card.dart';
 
 class OrderCard extends ConsumerWidget {
   final OrderModel order;
+  final VoidCallback? onTap;
 
   const OrderCard({
     super.key,
     required this.order,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final String clientString = order.client != null ? "- ${order.client!.name}" : '';
 
-    return LaundryCard(
-      child: Column(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: LaundryCard(
+        child: Column(
         spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -79,6 +84,7 @@ class OrderCard extends ConsumerWidget {
             ],
           ),
         ],
+        ),
       ),
     );
   }
