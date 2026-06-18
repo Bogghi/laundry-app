@@ -59,7 +59,7 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
                 return LaundryLoader();
               }
 
-              final List<ItemModel> items = snapshot.data!;
+              final List<ItemModel> items = snapshot.data!.where((item) => !item.deleted).toList();
               final selectedItems = ordersState.selectedItems;
 
               return LaundryGrid(

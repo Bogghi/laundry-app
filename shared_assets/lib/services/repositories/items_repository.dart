@@ -8,7 +8,7 @@ class ItemsRepository {
   ItemsRepository(this._client);
 
   Future<List<ItemModel>> getAll() async {
-    final data = await _client.from('items').select().eq('deleted', false);
+    final data = await _client.from('items').select();
     return data.map((json) => ItemModel.fromJson(json)).toList();
   }
 
