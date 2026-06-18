@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import 'package:shared_assets/models/order_model.dart';
 
@@ -121,7 +122,21 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 10,
                       children: [
-                        LaundrySubHeading(text: 'capi selezionati'),
+                        Row(
+                          children: [
+                            LaundrySubHeading(text: 'capi selezionati'),
+                            Spacer(),
+                            Visibility(
+                              visible: widget.order != null,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(Routes.itemsPicker);
+                                },
+                                child: HugeIcon(icon: HugeIcons.strokeRoundedEdit03),
+                              ),
+                            ),
+                          ],
+                        ),
                         LaundryDisplayList(
                           children: selectedItemsList.isEmpty
                             ? [const Text("Nessun capo selezionato")]
