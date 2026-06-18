@@ -130,7 +130,10 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
                               visible: widget.order != null,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.of(context).pushNamed(Routes.itemsPicker);
+                                  Navigator.of(context).pushNamed(
+                                    Routes.itemsPicker,
+                                    arguments: (source: Routes.orderInfo),
+                                  );
                                 },
                                 child: HugeIcon(icon: HugeIcons.strokeRoundedEdit03),
                               ),

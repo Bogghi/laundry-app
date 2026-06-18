@@ -43,9 +43,11 @@ class OrderItemsRepository {
   }
 
   Future<OrderItemModel> update(OrderItemModel orderItem) async {
+    final json = orderItem.toJson();
+    json.remove('created_at');
     final data = await _client
         .from('order_items')
-        .update(orderItem.toJson())
+        .update(json)
         .eq('id', orderItem.id as Object)
         .select('*, items(*)')
         .single();

@@ -16,6 +16,7 @@ import 'package:laundry_app/presentations/screens/client_info/client_info_page.d
 typedef LoadingPageArgs = ({Widget title, Future<void> Function() resolve});
 typedef ClientInfoArgs = ({ClientModel? client});
 typedef OrderInfoArgs = ({OrderModel? order});
+typedef ItemsPickerArgs = ({String? source});
 
 class Routes {
   static const String home = '/';
@@ -46,6 +47,9 @@ class Routes {
       final args = ModalRoute.of(context)!.settings.arguments as OrderInfoArgs?;
       return OrderInfoPage(order: args?.order);
     },
-    itemsPicker: (context) => const ItemsPickerPage(),
+    itemsPicker: (context) {
+      final args = ModalRoute.of(context)!.settings.arguments as ItemsPickerArgs?;
+      return  ItemsPickerPage(source: args?.source);
+    },
   };
 }

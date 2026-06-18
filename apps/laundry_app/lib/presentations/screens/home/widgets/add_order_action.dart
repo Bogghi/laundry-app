@@ -9,7 +9,10 @@ class AddOrderAction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FloatingActionButton(
-      onPressed: () => Navigator.of(context).pushNamed(Routes.itemsPicker),
+      onPressed: () => Navigator.of(context).pushNamed(
+        Routes.itemsPicker,
+        arguments: (source: Routes.home),
+      ),
       child: const Icon(Icons.add_rounded)
     );
   }

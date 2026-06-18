@@ -147,10 +147,58 @@ class OrdersProvider extends Notifier<OrdersState> {
     );
     final OrderModel saved = await SupabaseService.instance.orders.update(updated);
 
+    await _syncOrderItems(original);
+
     state = state.copyWith(
       currOrders: SupabaseService.instance.orders.getAll(),
     );
     return saved;
+  }
+
+  // Reconcile the persisted order_items against the edited selection: delete
+  // rows no longer selected, update changed quantities, insert new items.
+  Future<void> _syncOrderItems(OrderModel original) async {
+    final Map<int, OrderItemModel> existingByItemId = {
+      for (final orderItem in original.orderItems)
+        if (orderItem.itemId != null) orderItem.itemId!: orderItem,
+    };
+    final Map<int, int> selected = state.selectedItems;
+
+    final List<Future<void>> operations = [];
+
+    // Delete items that were removed from the selection.
+    for (final entry in existingByItemId.entries) {
+      if (!selected.containsKey(entry.key) && entry.value.id != null) {
+        operations.add(
+          SupabaseService.instance.orderItems.delete(entry.value.id!),
+        );
+      }
+    }
+
+    // Insert new items or update quantities of existing ones.
+    for (final entry in selected.entries) {
+      final existing = existingByItemId[entry.key];
+      if (existing == null) {
+        operations.add(
+          SupabaseService.instance.orderItems.create(OrderItemModel(
+            orderId: original.id,
+            itemId: entry.key,
+            quantity: entry.value,
+          )),
+        );
+      } else if (existing.quantity != entry.value && existing.id != null) {
+        operations.add(
+          SupabaseService.instance.orderItems.update(OrderItemModel(
+            id: existing.id,
+            orderId: original.id,
+            itemId: entry.key,
+            quantity: entry.value,
+          )),
+        );
+      }
+    }
+
+    await Future.wait(operations);
   }
 
   void clearNewOrder() {

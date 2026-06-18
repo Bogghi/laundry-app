@@ -14,7 +14,9 @@ import 'package:laundry_app/providers/orders_provider.dart';
 import 'package:laundry_app/utils/routes.dart';
 
 class ItemsPickerPage extends ConsumerStatefulWidget {
-  const ItemsPickerPage({super.key});
+  final String? source;
+
+  const ItemsPickerPage({super.key, this.source});
 
   @override
   ConsumerState<ItemsPickerPage> createState() => _ItemsPickerPageState();
@@ -28,7 +30,7 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
 
     return PopScope(
       onPopInvokedWithResult: (didPop, _) {
-        if (didPop) ref.read(ordersProvider.notifier).clearNewOrder();
+        if (didPop && widget.source == Routes.home) ref.read(ordersProvider.notifier).clearNewOrder();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -36,16 +38,19 @@ class _ItemsPickerPageState extends ConsumerState<ItemsPickerPage> {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary
-                ),
-                onPressed: (){
-                  Navigator.of(context).pushNamed(Routes.orderInfo);
-                },
-                child: Icon(
-                  Icons.check,
-                  color: Theme.of(context).colorScheme.onPrimary,
+              child: Visibility(
+                visible: widget.source == Routes.home,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary
+                  ),
+                  onPressed: (){
+                    Navigator.of(context).pushNamed(Routes.orderInfo);
+                  },
+                  child: Icon(
+                    Icons.check,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
               ),
             )

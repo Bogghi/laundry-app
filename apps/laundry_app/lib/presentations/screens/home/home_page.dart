@@ -44,8 +44,8 @@ class HomePage extends ConsumerWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: AppTheme.primaryBackgroundColorShade1,
-                    borderRadius: BorderRadius.circular(20)
+                  color: AppTheme.primaryBackgroundColorShade1,
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   children: [
