@@ -6,6 +6,7 @@ import 'package:shared_assets/icons/washer_icon.dart';
 
 import 'package:laundry_app/providers/orders_provider.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.dart';
+import 'package:laundry_app/presentations/screens/home/widgets/filter_panel.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
@@ -15,7 +16,12 @@ import 'package:laundry_app/app_theme.dart';
 
 
 class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  /// Shared open/closed flag for the filter panel. Lives here because the
+  /// toggle trigger (AppBar icon) and the panel (body Stack) are in separate
+  /// subtrees, so the flag must sit in their common ancestor.
+  final ValueNotifier<bool> _filterOpen = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +35,14 @@ class HomePage extends ConsumerWidget {
             SizedBox(width: 10),
             LaundryTitle(text: "Pristine"),
           ],
-        )
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () => _filterOpen.value = !_filterOpen.value,
+            child: HugeIcon(icon: HugeIcons.strokeRoundedFilterMail),
+          ),
+          SizedBox(width: 20),
+        ],
       ),
       drawer: Drawer(
         child: Padding(
@@ -72,57 +85,62 @@ class HomePage extends ConsumerWidget {
           ),
         ),
       ),
-      body: FutureBuilder(
-        future: orderState.currOrders,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return LaundryLoader();
-          }
+      body: Stack(
+        children: [
+          FutureBuilder(
+            future: orderState.currOrders,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return LaundryLoader();
+              }
 
-          final orders = snapshot.data!;
+              final orders = snapshot.data!;
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              ref.read(ordersProvider.notifier).fetchOrders();
-              await ref.read(ordersProvider).currOrders;
-            },
-            child: orders.isEmpty ?
-              ListView(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    child: Center(
-                      child: Text(
-                        "Aggiungi un ordine per tenerne traccia",
-                        style: TextStyle(
-                          color: Color.fromRGBO(65, 71, 80, 100),
-                          fontSize: 20,
-                        )
-                      ),
-                    ),
-                  ),
-                ],
-              ) :
-              ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: OrderCard(
-                      order: orders[index],
-                      onTap: () {
-                        ref.read(ordersProvider.notifier).loadOrder(orders[index]);
-                        Navigator.of(context).pushNamed(
-                          Routes.orderInfo,
-                          arguments: (order: orders[index]),
-                        );
-                      },
-                    ),
-                  );
+              return RefreshIndicator(
+                onRefresh: () async {
+                  ref.read(ordersProvider.notifier).fetchOrders();
+                  await ref.read(ordersProvider).currOrders;
                 },
-              ),
-          );
-        }
+                child: orders.isEmpty ?
+                  ListView(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: Center(
+                          child: Text(
+                            "Aggiungi un ordine per tenerne traccia",
+                            style: TextStyle(
+                              color: Color.fromRGBO(65, 71, 80, 100),
+                              fontSize: 20,
+                            )
+                          ),
+                        ),
+                      ),
+                    ],
+                  ) :
+                  ListView.builder(
+                    itemCount: orders.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        child: OrderCard(
+                          order: orders[index],
+                          onTap: () {
+                            ref.read(ordersProvider.notifier).loadOrder(orders[index]);
+                            Navigator.of(context).pushNamed(
+                              Routes.orderInfo,
+                              arguments: (order: orders[index]),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+              );
+            }
+          ),
+          FilterPanel(isOpen: _filterOpen),
+        ]
       ),
       floatingActionButton: const AddOrderAction(),
     );
