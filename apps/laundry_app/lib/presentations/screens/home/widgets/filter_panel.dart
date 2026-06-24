@@ -64,7 +64,7 @@ class _FilterPanelState extends State<FilterPanel>
         padding: const EdgeInsets.all(20),
         child: Card(
           margin: EdgeInsets.zero,
-          color: Colors.white,
+          color: AppTheme.primaryBackgroundColorShade2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
