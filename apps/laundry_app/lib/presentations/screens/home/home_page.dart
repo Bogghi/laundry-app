@@ -8,6 +8,8 @@ import 'package:laundry_app/providers/orders_provider.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/filter_panel.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/order_card.dart';
+import 'package:laundry_app/presentations/screens/home/widgets/order_sort.dart';
+import 'package:laundry_app/utils/order_sorter.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/presentations/widgets/laundry_settings_row.dart';
@@ -41,11 +43,18 @@ class _HomePageState extends ConsumerState<HomePage> {
   /// [FilterPanel] the same way as [_clientFilter].
   final TextEditingController _orderNumberFilter = TextEditingController();
 
+  /// Current sort selection for the order list. Owned here (like the filter
+  /// controllers) and shared with [FilterPanel], which renders the sort rows
+  /// and writes the user's choice back. A ValueNotifier so the list and the
+  /// AppBar dot rebuild reactively when the selection changes.
+  final ValueNotifier<OrderSort> _sort = ValueNotifier(OrderSort.defaultSort);
+
   @override
   void dispose() {
     _filterOpen.dispose();
     _clientFilter.dispose();
     _orderNumberFilter.dispose();
+    _sort.dispose();
     super.dispose();
   }
 
@@ -68,10 +77,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             // Rebuild only the icon when either filter changes, to show/hide
             // the "filters active" dot without touching the rest of the AppBar.
             child: AnimatedBuilder(
-              animation: Listenable.merge([_clientFilter, _orderNumberFilter]),
+              animation: Listenable.merge([_clientFilter, _orderNumberFilter, _sort]),
               builder: (context, _) {
                 final hasFilter = _clientFilter.text.trim().isNotEmpty ||
-                    _orderNumberFilter.text.trim().isNotEmpty;
+                    _orderNumberFilter.text.trim().isNotEmpty ||
+                    _sort.value != OrderSort.defaultSort;
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -158,7 +168,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               // `orders` are captured above and not re-requested. Listenable.merge
               // fires the builder when either controller changes.
               return AnimatedBuilder(
-                animation: Listenable.merge([_clientFilter, _orderNumberFilter]),
+                animation: Listenable.merge([_clientFilter, _orderNumberFilter, _sort]),
                 builder: (context, _) {
                   final clientQuery = _clientFilter.text.trim().toLowerCase();
                   final numberQuery = _orderNumberFilter.text.trim().toLowerCase();
@@ -176,6 +186,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                           return matchesClient && matchesNumber;
                         }).toList();
 
+                  // Sort after filtering so the order applies to the visible
+                  // subset; sortOrders returns a fresh list and never mutates
+                  // the captured `orders`.
+                  final sorted = sortOrders(filtered, _sort.value);
+
                   // Empty source vs. empty result are different messages.
                   final emptyMessage = orders.isEmpty
                       ? "Aggiungi un ordine per tenerne traccia"
@@ -186,7 +201,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ref.read(ordersProvider.notifier).fetchOrders();
                       await ref.read(ordersProvider).currOrders;
                     },
-                    child: filtered.isEmpty ?
+                    child: sorted.isEmpty ?
                       ListView(
                         children: [
                           SizedBox(
@@ -205,17 +220,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ],
                       ) :
                       ListView.builder(
-                        itemCount: filtered.length,
+                        itemCount: sorted.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                             child: OrderCard(
-                              order: filtered[index],
+                              order: sorted[index],
                               onTap: () {
-                                ref.read(ordersProvider.notifier).loadOrder(filtered[index]);
+                                ref.read(ordersProvider.notifier).loadOrder(sorted[index]);
                                 Navigator.of(context).pushNamed(
                                   Routes.orderInfo,
-                                  arguments: (order: filtered[index]),
+                                  arguments: (order: sorted[index]),
                                 );
                               },
                             ),
@@ -253,6 +268,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             isOpen: _filterOpen,
             orderNumberController: _orderNumberFilter,
             clientController: _clientFilter,
+            sort: _sort,
           ),
         ]
       ),
