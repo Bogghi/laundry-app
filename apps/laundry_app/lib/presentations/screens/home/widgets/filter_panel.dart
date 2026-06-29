@@ -77,48 +77,80 @@ class _FilterPanelState extends State<FilterPanel>
     super.dispose();
   }
 
-  /// One tappable sort option. Tapping an inactive key selects it (with its
-  /// natural default direction); tapping the active key flips the direction.
-  /// The active row is accented and shows an up/down arrow.
-  Widget _sortRow(OrderSort sort, SortKey key, String label) {
-    final isActive = sort.key == key;
+  /// Italian label for each sort key, shown in the dropdown.
+  static const Map<SortKey, String> _sortLabels = {
+    SortKey.createdAt: "Data creazione",
+    SortKey.deliveryDate: "Data consegna",
+    SortKey.orderNumber: "Numero d'ordine",
+    SortKey.clientName: "Cliente",
+  };
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        widget.sort.value = isActive
-            ? widget.sort.value.toggled()
-            : widget.sort.value.withKey(key);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        decoration: BoxDecoration(
-          color: isActive
-              ? const Color.fromRGBO(243, 244, 245, 100)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: AppTheme.primaryColorTone1,
-                fontSize: 18,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-              ),
+  /// The sort controls as a single row: a dropdown picking the field on the
+  /// left, and a rounded button toggling the direction on the right. Selecting
+  /// a new field resets to its natural direction (via [OrderSort.withKey]);
+  /// the button flips the current direction (via [OrderSort.toggled]).
+  Widget _sortControls(OrderSort sort) {
+    return Row(
+      children: [
+        Expanded(
+          child: DropdownButtonFormField<SortKey>(
+            initialValue: sort.key,
+            isExpanded: true,
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedArrowDown01,
+              color: AppTheme.primaryColorTone1,
             ),
-            if (isActive)
-              HugeIcon(
+            decoration: InputDecoration(
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              filled: true,
+              fillColor: const Color.fromRGBO(243, 244, 245, 100),
+            ),
+            style: TextStyle(
+              color: AppTheme.primaryColorTone1,
+              fontSize: 18,
+            ),
+            dropdownColor: AppTheme.primaryBackgroundColorShade2,
+            borderRadius: BorderRadius.circular(20),
+            items: SortKey.values
+                .map(
+                  (key) => DropdownMenuItem<SortKey>(
+                    value: key,
+                    child: Text(_sortLabels[key]!),
+                  ),
+                )
+                .toList(),
+            onChanged: (key) {
+              if (key != null) widget.sort.value = widget.sort.value.withKey(key);
+            },
+          ),
+        ),
+        const SizedBox(width: 10),
+        // Rounded direction toggle: up = ascending, down = descending.
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => widget.sort.value = widget.sort.value.toggled(),
+          child: Container(
+            width: 48,
+            height: 48,
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(243, 244, 245, 100),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: HugeIcon(
                 icon: sort.ascending
                     ? HugeIcons.strokeRoundedArrowUp01
                     : HugeIcons.strokeRoundedArrowDown01,
                 color: AppTheme.primaryColorTone1,
               ),
-          ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -186,23 +218,11 @@ class _FilterPanelState extends State<FilterPanel>
                   ),
                 ),
                 Text("Ordina per"),
-                // Rebuild only the sort rows when the selection changes, so
-                // picking a key / flipping direction doesn't touch the fields.
+                // Rebuild only the sort controls when the selection changes, so
+                // picking a field / flipping direction doesn't touch the fields.
                 ValueListenableBuilder<OrderSort>(
                   valueListenable: widget.sort,
-                  builder: (context, sort, _) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 6,
-                      children: [
-                        _sortRow(sort, SortKey.createdAt, "Data creazione"),
-                        _sortRow(sort, SortKey.deliveryDate, "Data consegna"),
-                        _sortRow(sort, SortKey.orderNumber, "Numero d'ordine"),
-                        _sortRow(sort, SortKey.clientName, "Cliente"),
-                      ],
-                    );
-                  },
+                  builder: (context, sort, _) => _sortControls(sort),
                 ),
                 // Clears both queries and resets the sort at once. The list and
                 // the AppBar dot both derive from these, so they update for free.
