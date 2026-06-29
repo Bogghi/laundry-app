@@ -10,7 +10,21 @@ import 'package:laundry_app/app_theme.dart';
 class FilterPanel extends StatefulWidget {
   final ValueNotifier<bool> isOpen;
 
-  const FilterPanel({super.key, required this.isOpen});
+  /// Controller for the "Numero d'ordine" field. Owned by the parent so the
+  /// home screen can read the query and filter its order list against it.
+  final TextEditingController orderNumberController;
+
+  /// Controller for the "Cliente" field. Owned by the parent so the home
+  /// screen can read the query and filter its order list against it; the
+  /// panel just binds the field to it.
+  final TextEditingController clientController;
+
+  const FilterPanel({
+    super.key,
+    required this.isOpen,
+    required this.orderNumberController,
+    required this.clientController,
+  });
 
   @override
   State<FilterPanel> createState() => _FilterPanelState();
@@ -77,9 +91,10 @@ class _FilterPanelState extends State<FilterPanel>
               children: [
                 Text("Numero d'ordine"),
                 TextFormField(
+                  controller: widget.orderNumberController,
                   decoration: InputDecoration(
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -94,6 +109,51 @@ class _FilterPanelState extends State<FilterPanel>
                   style: TextStyle(
                     color: AppTheme.primaryColorTone1,
                     fontSize: 18,
+                  ),
+                ),
+                Text("Cliente"),
+                TextFormField(
+                  controller: widget.clientController,
+                  decoration: InputDecoration(
+                    contentPadding:
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    hintStyle: TextStyle(
+                      color: AppTheme.primaryColorTone1,
+                      fontSize: 18,
+                    ),
+                    filled: true,
+                    fillColor: Color.fromRGBO(243, 244, 245, 100),
+                  ),
+                  style: TextStyle(
+                    color: AppTheme.primaryColorTone1,
+                    fontSize: 18,
+                  ),
+                ),
+                // Clears both queries at once. The list and the AppBar dot
+                // both derive from these controllers, so they update for free.
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      widget.orderNumberController.clear();
+                      widget.clientController.clear();
+                      // Drop focus so the keyboard retracts, then close the panel.
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      widget.isOpen.value = false;
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppTheme.primaryColorTone1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      "Cancella filtri",
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
                 ),
               ],
