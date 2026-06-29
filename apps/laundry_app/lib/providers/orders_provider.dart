@@ -201,6 +201,22 @@ class OrdersProvider extends Notifier<OrdersState> {
     await Future.wait(operations);
   }
 
+  // Soft-delete: flip the order's status to `deleted` and persist it. The
+  // repository's getAll() filters out `deleted` rows, so the order drops out of
+  // the list on the next fetch. Mirrors ClientsProvider.deleteClient.
+  Future<void> deleteOrder(OrderModel order) async {
+    final OrderModel deletedOrder = OrderModel(
+      id: order.id,
+      orderNumber: order.orderNumber,
+      clientId: order.clientId,
+      laundryId: order.laundryId,
+      deliveryDate: order.deliveryDate,
+      status: OrderStatus.deleted,
+    );
+    await SupabaseService.instance.orders.update(deletedOrder);
+    fetchOrders();
+  }
+
   void clearNewOrder() {
     // Build a fresh state directly so the nullable client/date are truly cleared.
     state = OrdersState(

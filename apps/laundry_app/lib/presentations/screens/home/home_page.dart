@@ -13,6 +13,7 @@ import 'package:laundry_app/utils/order_sorter.dart';
 import 'package:laundry_app/presentations/widgets/laundry_title.dart';
 import 'package:laundry_app/presentations/widgets/laundry_loader.dart';
 import 'package:laundry_app/presentations/widgets/laundry_settings_row.dart';
+import 'package:laundry_app/presentations/widgets/laundry_toast.dart';
 import 'package:laundry_app/utils/routes.dart';
 import 'package:laundry_app/app_theme.dart';
 
@@ -48,6 +49,12 @@ class _HomePageState extends ConsumerState<HomePage> {
   /// and writes the user's choice back. A ValueNotifier so the list and the
   /// AppBar dot rebuild reactively when the selection changes.
   final ValueNotifier<OrderSort> _sort = ValueNotifier(OrderSort.defaultSort);
+
+  // Ids dismissed via swipe. Filtered out immediately so the list shrinks on the
+  // same frame the Dismissible animates away, before the async delete/refetch
+  // catches up — otherwise Flutter throws "a dismissed Dismissible is still part
+  // of the tree".
+  final Set<int> _dismissedIds = {};
 
   @override
   void dispose() {
@@ -162,7 +169,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                 return LaundryLoader();
               }
 
-              final orders = snapshot.data!;
+              final orders = snapshot.data!
+                  .where((o) => !_dismissedIds.contains(o.id))
+                  .toList();
 
               // Rebuild only the list as either query changes; the fetched
               // `orders` are captured above and not re-requested. Listenable.merge
@@ -222,17 +231,73 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ListView.builder(
                         itemCount: sorted.length,
                         itemBuilder: (context, index) {
+                          final order = sorted[index];
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                            child: OrderCard(
-                              order: sorted[index],
-                              onTap: () {
-                                ref.read(ordersProvider.notifier).loadOrder(sorted[index]);
-                                Navigator.of(context).pushNamed(
-                                  Routes.orderInfo,
-                                  arguments: (order: sorted[index]),
-                                );
-                              },
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                ),
+                                Dismissible(
+                                  key: ValueKey(order.id),
+                                  direction: DismissDirection.endToStart,
+                                  background: const SizedBox.shrink(),
+                                  secondaryBackground: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(right: 24),
+                                    child: HugeIcon(
+                                      icon: HugeIcons.strokeRoundedDelete02,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  confirmDismiss: (direction) async {
+                                    return await showDialog<bool>(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text("Eliminare ordine?"),
+                                        content: Text(
+                                          "Vuoi eliminare l'ordine #${order.orderNumber}? "
+                                              "Questa azione non può essere annullata.",
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(false),
+                                            child: const Text("Annulla"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(true),
+                                            child: Text(
+                                              "Elimina",
+                                              style: TextStyle(color: Colors.red.shade600),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  onDismissed: (direction) {
+                                    setState(() => _dismissedIds.add(order.id!));
+                                    ref.read(ordersProvider.notifier).deleteOrder(order);
+                                    LaundryToast.show(context, "Ordine #${order.orderNumber} eliminato");
+                                  },
+                                  child: OrderCard(
+                                    order: order,
+                                    onTap: () {
+                                      ref.read(ordersProvider.notifier).loadOrder(order);
+                                      Navigator.of(context).pushNamed(
+                                        Routes.orderInfo,
+                                        arguments: (order: order),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         },
