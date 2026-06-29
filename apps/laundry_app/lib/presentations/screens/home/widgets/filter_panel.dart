@@ -105,6 +105,11 @@ class _FilterPanelState extends State<FilterPanel>
                   const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: AppTheme.primaryColorTone1),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: AppTheme.primaryColorTone1),
               ),
               filled: true,
               fillColor: const Color.fromRGBO(243, 244, 245, 100),
@@ -136,9 +141,10 @@ class _FilterPanelState extends State<FilterPanel>
           child: Container(
             width: 48,
             height: 48,
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(243, 244, 245, 100),
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(243, 244, 245, 100),
               shape: BoxShape.circle,
+              border: Border.all(color: AppTheme.primaryColorTone1),
             ),
             child: Center(
               child: HugeIcon(
