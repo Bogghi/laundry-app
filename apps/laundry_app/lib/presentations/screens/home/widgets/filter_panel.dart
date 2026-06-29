@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import 'package:laundry_app/app_theme.dart';
+import 'package:laundry_app/presentations/screens/home/widgets/order_sort.dart';
 
 /// The home-screen filter panel that slides down from the top.
 ///
@@ -19,11 +21,17 @@ class FilterPanel extends StatefulWidget {
   /// panel just binds the field to it.
   final TextEditingController clientController;
 
+  /// Current sort selection. Owned by the parent (like the controllers above)
+  /// so the home screen can read it to order its list; the panel renders the
+  /// sort rows and writes the user's choice back into it.
+  final ValueNotifier<OrderSort> sort;
+
   const FilterPanel({
     super.key,
     required this.isOpen,
     required this.orderNumberController,
     required this.clientController,
+    required this.sort,
   });
 
   @override
@@ -67,6 +75,51 @@ class _FilterPanelState extends State<FilterPanel>
     widget.isOpen.removeListener(_handleToggle);
     _controller.dispose();
     super.dispose();
+  }
+
+  /// One tappable sort option. Tapping an inactive key selects it (with its
+  /// natural default direction); tapping the active key flips the direction.
+  /// The active row is accented and shows an up/down arrow.
+  Widget _sortRow(OrderSort sort, SortKey key, String label) {
+    final isActive = sort.key == key;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        widget.sort.value = isActive
+            ? widget.sort.value.toggled()
+            : widget.sort.value.withKey(key);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        decoration: BoxDecoration(
+          color: isActive
+              ? const Color.fromRGBO(243, 244, 245, 100)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: AppTheme.primaryColorTone1,
+                fontSize: 18,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+            if (isActive)
+              HugeIcon(
+                icon: sort.ascending
+                    ? HugeIcons.strokeRoundedArrowUp01
+                    : HugeIcons.strokeRoundedArrowDown01,
+                color: AppTheme.primaryColorTone1,
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -132,14 +185,34 @@ class _FilterPanelState extends State<FilterPanel>
                     fontSize: 18,
                   ),
                 ),
-                // Clears both queries at once. The list and the AppBar dot
-                // both derive from these controllers, so they update for free.
+                Text("Ordina per"),
+                // Rebuild only the sort rows when the selection changes, so
+                // picking a key / flipping direction doesn't touch the fields.
+                ValueListenableBuilder<OrderSort>(
+                  valueListenable: widget.sort,
+                  builder: (context, sort, _) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 6,
+                      children: [
+                        _sortRow(sort, SortKey.createdAt, "Data creazione"),
+                        _sortRow(sort, SortKey.deliveryDate, "Data consegna"),
+                        _sortRow(sort, SortKey.orderNumber, "Numero d'ordine"),
+                        _sortRow(sort, SortKey.clientName, "Cliente"),
+                      ],
+                    );
+                  },
+                ),
+                // Clears both queries and resets the sort at once. The list and
+                // the AppBar dot both derive from these, so they update for free.
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () {
                       widget.orderNumberController.clear();
                       widget.clientController.clear();
+                      widget.sort.value = OrderSort.defaultSort;
                       // Drop focus so the keyboard retracts, then close the panel.
                       FocusManager.instance.primaryFocus?.unfocus();
                       widget.isOpen.value = false;
