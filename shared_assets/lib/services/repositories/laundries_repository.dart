@@ -13,6 +13,12 @@ class LaundriesRepository {
     return LaundryModel.fromJson(data);
   }
 
+  Future<LaundryModel?> getById(int id) async {
+    final data = await _client.from('laundries').select().eq('id', id).maybeSingle();
+    if (data == null) return null;
+    return LaundryModel.fromJson(data);
+  }
+
   Future<LaundryModel> create(LaundryModel laundry) async {
     final laundryJson = laundry.toJson();
     laundryJson.remove('id');
