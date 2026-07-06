@@ -20,7 +20,7 @@ OrderModel _order({
     deliveryDate: deliveryDate,
     client: clientName == null
         ? null
-        : ClientModel(name: clientName, phoneNumber: 0),
+        : ClientModel(laundryId: 1, name: clientName, phoneNumber: 0),
   );
 }
 
