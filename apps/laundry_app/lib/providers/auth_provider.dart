@@ -53,6 +53,29 @@ class AuthNotifier extends Notifier<AuthState?> {
     await prefs.remove(_loggedInUserIdKey);
     state = null;
   }
+
+  /// Re-checks the logged-in user is still valid, logging out if not.
+  /// Returns true if the session was revoked.
+  Future<bool> revalidate() async {
+    final current = state;
+    if (current == null) return false;
+
+    final user = await SupabaseService.instance.users.getById(current.user.id!);
+    if (user == null) {
+      await logout();
+      return true;
+    }
+
+    if (user.type == UserType.employ) {
+      final userLaundry = await SupabaseService.instance.userLaundries.findForUser(user.id!);
+      if (userLaundry?.status != UserLaundryStatus.approved) {
+        await logout();
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
 
 final authProvider = NotifierProvider<AuthNotifier, AuthState?>(AuthNotifier.new);
