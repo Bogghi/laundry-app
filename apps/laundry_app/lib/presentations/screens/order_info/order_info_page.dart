@@ -45,10 +45,31 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
     super.dispose();
   }
 
+  // Only relevant in edit mode; create mode has no "original" to diff against.
+  bool _hasChanges(OrdersState ordersState) {
+    final order = widget.order;
+    if (order == null) return true;
+
+    final originalItems = {
+      for (final orderItem in order.orderItems)
+        if (orderItem.itemId != null) orderItem.itemId!: orderItem.quantity ?? 0,
+    };
+
+    final selectedItems = ordersState.selectedItems;
+    final sameItems = selectedItems.length == originalItems.length &&
+        selectedItems.entries.every((e) => originalItems[e.key] == e.value);
+
+    return ordersState.orderNumber != order.orderNumber ||
+        ordersState.orderClient?.id != order.clientId ||
+        ordersState.deliveryDate != order.deliveryDate ||
+        !sameItems;
+  }
+
   @override
   Widget build(BuildContext context) {
     final itemsState = ref.watch(itemsProvider);
     final ordersState = ref.watch(ordersProvider);
+    final canSave = !_isSaving && _hasChanges(ordersState);
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +81,7 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary
               ),
-              onPressed: _isSaving ? null : () async {
+              onPressed: !canSave ? null : () async {
                 setState(() => _isSaving = true);
                 try {
                   final bool isEditing = widget.order != null;
