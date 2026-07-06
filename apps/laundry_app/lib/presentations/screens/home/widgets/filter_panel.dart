@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
+import 'package:shared_assets/models/order_model.dart';
+
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/order_sort.dart';
 
@@ -26,12 +28,17 @@ class FilterPanel extends StatefulWidget {
   /// sort rows and writes the user's choice back into it.
   final ValueNotifier<OrderSort> sort;
 
+  /// Current status filter (`null` = any status). Owned by the parent, same
+  /// as [sort]; the panel renders the dropdown and writes the choice back.
+  final ValueNotifier<OrderStatus?> statusFilter;
+
   const FilterPanel({
     super.key,
     required this.isOpen,
     required this.orderNumberController,
     required this.clientController,
     required this.sort,
+    required this.statusFilter,
   });
 
   @override
@@ -84,6 +91,54 @@ class _FilterPanelState extends State<FilterPanel>
     SortKey.orderNumber: "Numero d'ordine",
     SortKey.clientName: "Cliente",
   };
+
+  /// Italian label for each status filter option; `null` means "any status".
+  static const Map<OrderStatus?, String> _statusLabels = {
+    null: "Tutti",
+    OrderStatus.doing: "In corso",
+    OrderStatus.completed: "Completati",
+  };
+
+  /// The status filter dropdown, styled like the sort field's dropdown.
+  Widget _statusControl(OrderStatus? status) {
+    return DropdownButtonFormField<OrderStatus?>(
+      initialValue: status,
+      isExpanded: true,
+      icon: HugeIcon(
+        icon: HugeIcons.strokeRoundedArrowDown01,
+        color: AppTheme.primaryColorTone1,
+      ),
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: AppTheme.primaryColorTone1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: AppTheme.primaryColorTone1),
+        ),
+        filled: true,
+        fillColor: const Color.fromRGBO(243, 244, 245, 100),
+      ),
+      style: TextStyle(
+        color: AppTheme.primaryColorTone1,
+        fontSize: 18,
+      ),
+      dropdownColor: AppTheme.primaryBackgroundColorShade2,
+      borderRadius: BorderRadius.circular(20),
+      items: _statusLabels.entries
+          .map(
+            (entry) => DropdownMenuItem<OrderStatus?>(
+              value: entry.key,
+              child: Text(entry.value),
+            ),
+          )
+          .toList(),
+      onChanged: (status) => widget.statusFilter.value = status,
+    );
+  }
 
   /// The sort controls as a single row: a dropdown picking the field on the
   /// left, and a rounded button toggling the direction on the right. Selecting
@@ -223,6 +278,12 @@ class _FilterPanelState extends State<FilterPanel>
                     fontSize: 18,
                   ),
                 ),
+                Text("Stato"),
+                // Rebuild only the status control when the selection changes.
+                ValueListenableBuilder<OrderStatus?>(
+                  valueListenable: widget.statusFilter,
+                  builder: (context, status, _) => _statusControl(status),
+                ),
                 Text("Ordina per"),
                 // Rebuild only the sort controls when the selection changes, so
                 // picking a field / flipping direction doesn't touch the fields.
@@ -239,6 +300,7 @@ class _FilterPanelState extends State<FilterPanel>
                       widget.orderNumberController.clear();
                       widget.clientController.clear();
                       widget.sort.value = OrderSort.defaultSort;
+                      widget.statusFilter.value = OrderStatus.doing;
                       // Drop focus so the keyboard retracts, then close the panel.
                       FocusManager.instance.primaryFocus?.unfocus();
                       widget.isOpen.value = false;

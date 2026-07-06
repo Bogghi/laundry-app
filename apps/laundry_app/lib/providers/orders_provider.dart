@@ -230,6 +230,20 @@ class OrdersProvider extends Notifier<OrdersState> {
     fetchOrders();
   }
 
+  // Mirrors deleteOrder: flip the order's status to `completed` and persist.
+  Future<void> completeOrder(OrderModel order) async {
+    final OrderModel completedOrder = OrderModel(
+      id: order.id,
+      orderNumber: order.orderNumber,
+      clientId: order.clientId,
+      laundryId: order.laundryId,
+      deliveryDate: order.deliveryDate,
+      status: OrderStatus.completed,
+    );
+    await SupabaseService.instance.orders.update(completedOrder);
+    fetchOrders();
+  }
+
   void clearNewOrder() {
     // Build a fresh state directly so the nullable client/date are truly cleared.
     state = OrdersState(
