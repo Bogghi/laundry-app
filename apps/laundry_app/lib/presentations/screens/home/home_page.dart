@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import 'package:shared_assets/icons/washer_icon.dart';
+import 'package:shared_assets/models/order_model.dart';
 import 'package:shared_assets/models/user_model.dart';
 
 import 'package:laundry_app/providers/auth_provider.dart';
@@ -52,6 +53,12 @@ class _HomePageState extends ConsumerState<HomePage> {
   /// AppBar dot rebuild reactively when the selection changes.
   final ValueNotifier<OrderSort> _sort = ValueNotifier(OrderSort.defaultSort);
 
+  /// Current status filter. Defaults to incomplete orders (`doing`); `null`
+  /// means "any status". Owned here and shared with [FilterPanel], same as
+  /// the other filter controls.
+  final ValueNotifier<OrderStatus?> _statusFilter =
+      ValueNotifier(OrderStatus.doing);
+
   // Ids dismissed via swipe. Filtered out immediately so the list shrinks on the
   // same frame the Dismissible animates away, before the async delete/refetch
   // catches up — otherwise Flutter throws "a dismissed Dismissible is still part
@@ -64,6 +71,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     _clientFilter.dispose();
     _orderNumberFilter.dispose();
     _sort.dispose();
+    _statusFilter.dispose();
     super.dispose();
   }
 
@@ -87,11 +95,13 @@ class _HomePageState extends ConsumerState<HomePage> {
             // Rebuild only the icon when either filter changes, to show/hide
             // the "filters active" dot without touching the rest of the AppBar.
             child: AnimatedBuilder(
-              animation: Listenable.merge([_clientFilter, _orderNumberFilter, _sort]),
+              animation: Listenable.merge(
+                  [_clientFilter, _orderNumberFilter, _sort, _statusFilter]),
               builder: (context, _) {
                 final hasFilter = _clientFilter.text.trim().isNotEmpty ||
                     _orderNumberFilter.text.trim().isNotEmpty ||
-                    _sort.value != OrderSort.defaultSort;
+                    _sort.value != OrderSort.defaultSort ||
+                    _statusFilter.value != OrderStatus.doing;
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -189,11 +199,15 @@ class _HomePageState extends ConsumerState<HomePage> {
               // `orders` are captured above and not re-requested. Listenable.merge
               // fires the builder when either controller changes.
               return AnimatedBuilder(
-                animation: Listenable.merge([_clientFilter, _orderNumberFilter, _sort]),
+                animation: Listenable.merge(
+                    [_clientFilter, _orderNumberFilter, _sort, _statusFilter]),
                 builder: (context, _) {
                   final clientQuery = _clientFilter.text.trim().toLowerCase();
                   final numberQuery = _orderNumberFilter.text.trim().toLowerCase();
-                  final hasFilter = clientQuery.isNotEmpty || numberQuery.isNotEmpty;
+                  final statusQuery = _statusFilter.value;
+                  final hasFilter = clientQuery.isNotEmpty ||
+                      numberQuery.isNotEmpty ||
+                      statusQuery != null;
 
                   final filtered = !hasFilter
                       ? orders
@@ -204,7 +218,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   .contains(clientQuery);
                           final matchesNumber = numberQuery.isEmpty ||
                               o.orderNumber.toLowerCase().contains(numberQuery);
-                          return matchesClient && matchesNumber;
+                          final matchesStatus =
+                              statusQuery == null || o.status == statusQuery;
+                          return matchesClient && matchesNumber && matchesStatus;
                         }).toList();
 
                   // Sort after filtering so the order applies to the visible
@@ -246,70 +262,104 @@ class _HomePageState extends ConsumerState<HomePage> {
                           final order = sorted[index];
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
+                            child: Dismissible(
+                              key: ValueKey(order.id),
+                              direction: DismissDirection.horizontal,
+                              // Right swipe: mark complete.
+                              background: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                Dismissible(
-                                  key: ValueKey(order.id),
-                                  direction: DismissDirection.endToStart,
-                                  background: const SizedBox.shrink(),
-                                  secondaryBackground: Container(
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.only(right: 24),
-                                    child: HugeIcon(
-                                      icon: HugeIcons.strokeRoundedDelete02,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  confirmDismiss: (direction) async {
-                                    return await showDialog<bool>(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: const Text("Eliminare ordine?"),
-                                        content: Text(
-                                          "Vuoi eliminare l'ordine #${order.orderNumber}? "
-                                              "Questa azione non può essere annullata.",
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(false),
-                                            child: const Text("Annulla"),
-                                          ),
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(true),
-                                            child: Text(
-                                              "Elimina",
-                                              style: TextStyle(color: Colors.red.shade600),
-                                            ),
-                                          ),
-                                        ],
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(left: 24),
+                                child: HugeIcon(
+                                  icon: HugeIcons.strokeRoundedTick02,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              // Left swipe: delete.
+                              secondaryBackground: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 24),
+                                child: HugeIcon(
+                                  icon: HugeIcons.strokeRoundedDelete02,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              confirmDismiss: (direction) async {
+                                if (direction == DismissDirection.startToEnd) {
+                                  return await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text("Completare ordine?"),
+                                      content: Text(
+                                        "Vuoi segnare l'ordine #${order.orderNumber} come completato?",
                                       ),
-                                    );
-                                  },
-                                  onDismissed: (direction) {
-                                    setState(() => _dismissedIds.add(order.id!));
-                                    ref.read(ordersProvider.notifier).deleteOrder(order);
-                                    LaundryToast.show(context, "Ordine #${order.orderNumber} eliminato");
-                                  },
-                                  child: OrderCard(
-                                    order: order,
-                                    onTap: () {
-                                      ref.read(ordersProvider.notifier).loadOrder(order);
-                                      Navigator.of(context).pushNamed(
-                                        Routes.orderInfo,
-                                        arguments: (order: order),
-                                      );
-                                    },
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(false),
+                                          child: const Text("Annulla"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(true),
+                                          child: Text(
+                                            "Completa",
+                                            style: TextStyle(color: Colors.green.shade600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Eliminare ordine?"),
+                                    content: Text(
+                                      "Vuoi eliminare l'ordine #${order.orderNumber}? "
+                                          "Questa azione non può essere annullata.",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(false),
+                                        child: const Text("Annulla"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(true),
+                                        child: Text(
+                                          "Elimina",
+                                          style: TextStyle(color: Colors.red.shade600),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                );
+                              },
+                              onDismissed: (direction) {
+                                setState(() => _dismissedIds.add(order.id!));
+                                if (direction == DismissDirection.startToEnd) {
+                                  ref.read(ordersProvider.notifier).completeOrder(order);
+                                  LaundryToast.show(context, "Ordine #${order.orderNumber} completato");
+                                } else {
+                                  ref.read(ordersProvider.notifier).deleteOrder(order);
+                                  LaundryToast.show(context, "Ordine #${order.orderNumber} eliminato");
+                                }
+                              },
+                              child: OrderCard(
+                                order: order,
+                                onTap: () {
+                                  ref.read(ordersProvider.notifier).loadOrder(order);
+                                  Navigator.of(context).pushNamed(
+                                    Routes.orderInfo,
+                                    arguments: (order: order),
+                                  );
+                                },
+                              ),
                             ),
                           );
                         },
@@ -346,6 +396,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             orderNumberController: _orderNumberFilter,
             clientController: _clientFilter,
             sort: _sort,
+            statusFilter: _statusFilter,
           ),
         ]
       ),
