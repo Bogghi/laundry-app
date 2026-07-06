@@ -7,8 +7,12 @@ class ClientsRepository {
 
   ClientsRepository(this._client);
 
-  Future<List<ClientModel>> getAll() async {
-    final data = await _client.from('clients').select().neq('status', ClientStatus.deleted.name);
+  Future<List<ClientModel>> getAll(int laundryId) async {
+    final data = await _client
+        .from('clients')
+        .select()
+        .eq('laundry_id', laundryId)
+        .neq('status', ClientStatus.deleted.name);
     return data.map((json) => ClientModel.fromJson(json)).toList();
   }
 

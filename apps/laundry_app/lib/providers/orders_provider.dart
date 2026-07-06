@@ -5,6 +5,8 @@ import 'package:shared_assets/models/order_item_model.dart';
 import 'package:shared_assets/models/client_model.dart';
 import 'package:shared_assets/services/supabase_service.dart';
 
+import 'package:laundry_app/providers/auth_provider.dart';
+
 class OrdersState {
   final Future<List<OrderModel>>? currOrders;
   final Map<int, int> selectedItems;
@@ -38,14 +40,25 @@ class OrdersState {
 }
 
 class OrdersProvider extends Notifier<OrdersState> {
+  int get _laundryId {
+    final laundryId = ref.read(authProvider)?.userLaundry?.laundryId;
+    if (laundryId == null) {
+      throw StateError('Cannot access orders without a current laundry');
+    }
+    return laundryId;
+  }
+
   @override
   OrdersState build() {
-    final futureOrders = SupabaseService.instance.orders.getAll();
+    final laundryId = ref.watch(authProvider)?.userLaundry?.laundryId;
+    final futureOrders = laundryId == null
+        ? Future.value(<OrderModel>[])
+        : SupabaseService.instance.orders.getAll(laundryId);
     return OrdersState(currOrders: futureOrders);
   }
 
   void fetchOrders() {
-    state = state.copyWith(currOrders: SupabaseService.instance.orders.getAll());
+    state = state.copyWith(currOrders: SupabaseService.instance.orders.getAll(_laundryId));
   }
 
   void addItem(int itemId) {
@@ -113,7 +126,7 @@ class OrdersProvider extends Notifier<OrdersState> {
       final OrderModel newOrder = OrderModel(
         orderNumber: state.orderNumber,
         clientId: state.orderClient!.id,
-        laundryId: 1,
+        laundryId: _laundryId,
         deliveryDate: state.deliveryDate,
       );
       final OrderModel savedOrder = await SupabaseService.instance.orders.create(newOrder);
@@ -127,7 +140,7 @@ class OrdersProvider extends Notifier<OrdersState> {
       }));
 
       state = state.copyWith(
-        currOrders: SupabaseService.instance.orders.getAll()
+        currOrders: SupabaseService.instance.orders.getAll(_laundryId)
       );
       return savedOrder;
     }
@@ -150,7 +163,7 @@ class OrdersProvider extends Notifier<OrdersState> {
     await _syncOrderItems(original);
 
     state = state.copyWith(
-      currOrders: SupabaseService.instance.orders.getAll(),
+      currOrders: SupabaseService.instance.orders.getAll(_laundryId),
     );
     return saved;
   }
