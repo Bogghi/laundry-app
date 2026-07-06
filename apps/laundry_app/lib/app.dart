@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:laundry_app/app_theme.dart';
 import 'package:laundry_app/presentations/screens/loading/loading_page.dart';
-import 'package:laundry_app/providers/onboarding_provider.dart';
+import 'package:laundry_app/providers/auth_provider.dart';
 import 'package:laundry_app/utils/routes.dart';
 
 class App extends ConsumerWidget {
@@ -22,10 +22,11 @@ class App extends ConsumerWidget {
             builder: (context) => LoadingPage(
               title: const Text('Pristine'),
               resolve: () async {
-                final hasOnboarded = await ref.read(onboardingProvider.future);
+                await ref.read(authProvider.notifier).loadFromStorage();
+                final auth = ref.read(authProvider);
                 final navigator = App.navigatorKey.currentState;
                 navigator?.pushReplacementNamed(
-                  hasOnboarded ? Routes.home : Routes.onboarding,
+                  auth == null ? Routes.onboarding : Routes.home,
                 );
               },
             ),

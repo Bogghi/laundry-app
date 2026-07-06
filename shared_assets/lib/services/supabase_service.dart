@@ -4,6 +4,9 @@ import 'repositories/orders_repository.dart';
 import 'repositories/clients_repository.dart';
 import 'repositories/items_repository.dart';
 import 'repositories/order_items_repository.dart';
+import 'repositories/users_repository.dart';
+import 'repositories/laundries_repository.dart';
+import 'repositories/user_laundries_repository.dart';
 
 class SupabaseService {
   final SupabaseClient _client;
@@ -12,12 +15,18 @@ class SupabaseService {
   late final ClientsRepository clients;
   late final ItemsRepository items;
   late final OrderItemsRepository orderItems;
+  late final UsersRepository users;
+  late final LaundriesRepository laundries;
+  late final UserLaundriesRepository userLaundries;
 
   SupabaseService._(this._client) {
     orders = OrdersRepository(_client);
     clients = ClientsRepository(_client);
     items = ItemsRepository(_client);
     orderItems = OrderItemsRepository(_client);
+    users = UsersRepository(_client);
+    laundries = LaundriesRepository(_client);
+    userLaundries = UserLaundriesRepository(_client);
   }
 
   static SupabaseService? _instance;

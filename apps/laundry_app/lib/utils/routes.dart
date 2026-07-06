@@ -9,6 +9,7 @@ import 'package:laundry_app/presentations/screens/onboarding/onboarding_page.dar
 import 'package:laundry_app/presentations/screens/items_manager/items_manager_page.dart';
 import 'package:laundry_app/presentations/screens/new_items_icon_picker/new_items_icon_picker_page.dart';
 import 'package:laundry_app/presentations/screens/clients_manager/clients_manager_page.dart';
+import 'package:laundry_app/presentations/screens/employees_manager/employees_manager_page.dart';
 import 'package:laundry_app/presentations/screens/order_info/order_info_page.dart';
 
 import 'package:laundry_app/presentations/screens/items_picker/items_picker_page.dart';
@@ -26,6 +27,7 @@ class Routes {
   static const String itemsManager = '/itemsManager';
   static const String newItemsIconPicker = '${Routes.itemsManager}/newItemsIconPicker';
   static const String clientsManagerPage = '/clientsManagerPage';
+  static const String employeesManagerPage = '/employeesManagerPage';
   static const String clientInfo = '/client_info';
   static const String orderInfo = '/order_info';
   static const String itemsPicker = '/items_picker';
@@ -40,6 +42,7 @@ class Routes {
     itemsManager: (context) => const ItemsManagerPage(),
     newItemsIconPicker: (context) => const NewItemsIconPickerPage(),
     clientsManagerPage: (context) => const ClientsManagerPage(),
+    employeesManagerPage: (context) => const EmployeesManagerPage(),
     clientInfo: (context) {
       final args = ModalRoute.of(context)!.settings.arguments as ClientInfoArgs?;
       return ClientInfoPage(

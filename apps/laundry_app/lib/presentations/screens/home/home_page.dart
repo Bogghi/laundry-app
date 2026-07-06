@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import 'package:shared_assets/icons/washer_icon.dart';
+import 'package:shared_assets/models/user_model.dart';
 
+import 'package:laundry_app/providers/auth_provider.dart';
 import 'package:laundry_app/providers/orders_provider.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/add_order_action.dart';
 import 'package:laundry_app/presentations/screens/home/widgets/filter_panel.dart';
@@ -68,6 +70,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final orderState = ref.watch(ordersProvider);
+    final isOwner = ref.watch(authProvider)?.user.type == UserType.owner;
 
     return Scaffold(
       appBar: AppBar(
@@ -153,6 +156,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                       hugeIcon: HugeIcons.strokeRoundedUserGroup,
                       text: "Gestione clienti",
                     ),
+                    if (isOwner)
+                      LaundrySettingsRow(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushNamed(Routes.employeesManagerPage);
+                        },
+                        hugeIcon: HugeIcons.strokeRoundedUserCheck01,
+                        text: "Dipendenti",
+                      ),
                   ],
                 ),
               ),
