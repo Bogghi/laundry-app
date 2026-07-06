@@ -5,6 +5,7 @@ import 'package:shared_assets/models/order_model.dart';
 
 import 'package:laundry_app/utils/navigation_controller.dart';
 import 'package:laundry_app/presentations/screens/loading/loading_page.dart';
+import 'package:laundry_app/presentations/screens/onboarding/onboarding_page.dart';
 import 'package:laundry_app/presentations/screens/items_manager/items_manager_page.dart';
 import 'package:laundry_app/presentations/screens/new_items_icon_picker/new_items_icon_picker_page.dart';
 import 'package:laundry_app/presentations/screens/clients_manager/clients_manager_page.dart';
@@ -20,6 +21,7 @@ typedef ItemsPickerArgs = ({String? source});
 
 class Routes {
   static const String home = '/';
+  static const String onboarding = '/onboarding';
   static const String loadingPage = '/loading';
   static const String itemsManager = '/itemsManager';
   static const String newItemsIconPicker = '${Routes.itemsManager}/newItemsIconPicker';
@@ -30,6 +32,7 @@ class Routes {
 
   static final Map<String, WidgetBuilder> all = {
     home: (context) => const NavigationController(),
+    onboarding: (context) => const OnboardingPage(),
     loadingPage: (context) {
       final args = ModalRoute.of(context)!.settings.arguments as LoadingPageArgs;
       return LoadingPage(title: args.title, resolve: args.resolve);
