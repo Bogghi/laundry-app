@@ -14,6 +14,7 @@ import 'package:laundry_app/presentations/screens/order_info/order_info_page.dar
 
 import 'package:laundry_app/presentations/screens/items_picker/items_picker_page.dart';
 import 'package:laundry_app/presentations/screens/client_info/client_info_page.dart';
+import 'package:laundry_app/presentations/screens/user_info/user_info_page.dart';
 
 typedef LoadingPageArgs = ({Widget title, Future<void> Function() resolve});
 typedef ClientInfoArgs = ({ClientModel? client});
@@ -31,6 +32,7 @@ class Routes {
   static const String clientInfo = '/client_info';
   static const String orderInfo = '/order_info';
   static const String itemsPicker = '/items_picker';
+  static const String userInfo = '/user_info';
 
   static final Map<String, WidgetBuilder> all = {
     home: (context) => const NavigationController(),
@@ -57,5 +59,6 @@ class Routes {
       final args = ModalRoute.of(context)!.settings.arguments as ItemsPickerArgs?;
       return  ItemsPickerPage(source: args?.source);
     },
+    userInfo: (context) => const UserInfoPage(),
   };
 }

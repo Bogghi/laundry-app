@@ -168,6 +168,21 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ],
                 ),
               ),
+              SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryBackgroundColorShade1,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: LaundrySettingsRow(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed(Routes.userInfo);
+                  },
+                  hugeIcon: HugeIcons.strokeRoundedUserCircle,
+                  text: "Il mio account",
+                ),
+              ),
             ],
           ),
         ),
