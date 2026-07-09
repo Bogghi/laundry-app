@@ -33,24 +33,37 @@ class OrderCard extends ConsumerWidget {
             spacing: 15,
             children: [
               Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(215, 227, 248, 100),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: WashOrderIcon(),
-                  )
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(215, 227, 248, 100),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: WashOrderIcon(),
+                ),
               ),
               Expanded(
-                child: Text(
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(65, 71, 80, 100)
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  "#${order.orderNumber} $clientString",
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(65, 71, 80, 100),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      "#${order.orderNumber} $clientString",
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: order.status.decoration,
+                      child: Text(
+                        order.status.label.toUpperCase(),
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
                 ),
               )
             ],

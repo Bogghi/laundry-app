@@ -1,7 +1,41 @@
+import 'package:flutter/widgets.dart';
 import 'package:shared_assets/models/client_model.dart';
 import 'package:shared_assets/models/order_item_model.dart';
 
-enum OrderStatus { doing, completed, deleted }
+enum OrderStatus {
+  doing(
+    'in corso',
+    BoxDecoration(
+      color: Color(0xFFFFF3CD),
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+    ),
+  ),
+  completed(
+    'completato',
+    BoxDecoration(
+      color: Color(0xFFCCE5FF),
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+    ),
+  ),
+  deleted(
+    'cancellato',
+    BoxDecoration(
+      color: Color(0xFFD4EDDA),
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+    ),
+  );
+
+  final String label;
+  final BoxDecoration decoration;
+  const OrderStatus(this.label, this.decoration);
+
+  static OrderStatus fromLabel(label) {
+    return OrderStatus.values.firstWhere(
+      (e) => e.label == label,
+      orElse: () => throw ArgumentError('Unknown status: $label'),
+    );
+  }
+}
 
 class OrderModel {
   final int? id;

@@ -184,7 +184,20 @@ class _OrderInfoPageState extends ConsumerState<OrderInfoPage> {
                   );
                 },
               ),
-              SectionTitle(text: "INFORMAZIONI"),
+              Row(
+                children: [
+                  SectionTitle(text: "INFORMAZIONI"),
+                  Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: widget.order!.status.decoration,
+                    child: Text(
+                      widget.order!.status.label.toUpperCase(),
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
               LaundryCard(
                 title: "numero ordine",
                 child: TextFormField(
